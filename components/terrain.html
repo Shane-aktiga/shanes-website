@@ -1,0 +1,304 @@
+<!-- ==========================================================================
+     Component 2: Interactive Terrain
+     Needs: global.css, terrain.css, terrain.js
+     ========================================================================== -->
+
+<section class="sp-terrain" data-sp-terrain aria-labelledby="sp-terrain-title">
+
+  <!-- The scene. Decorative; terrain.js also sets aria-hidden defensively. -->
+  <div class="sp-terrain__scene" data-sp-scene aria-hidden="true">
+    <svg class="sp-terrain__sky" viewBox="0 0 1440 900"
+         preserveAspectRatio="xMidYMax slice" focusable="false">
+      <defs>
+        <radialGradient id="sp-moonGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#DCEAF4" stop-opacity="0.42"/>
+          <stop offset="55%"  stop-color="#A8C6DA" stop-opacity="0.10"/>
+          <stop offset="100%" stop-color="#A8C6DA" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="sp-haze" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#5C86A6" stop-opacity="0"/>
+          <stop offset="45%"  stop-color="#6E90AC" stop-opacity="0.26"/>
+          <stop offset="100%" stop-color="#6E90AC" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="sp-warmHaze" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#D79A6A" stop-opacity="0"/>
+          <stop offset="50%"  stop-color="#D79A6A" stop-opacity="0.22"/>
+          <stop offset="100%" stop-color="#D79A6A" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="sp-cloud" cx="50%" cy="50%" r="50%">
+          <stop offset="0%"   stop-color="#9FB9CC" stop-opacity="0.22"/>
+          <stop offset="70%"  stop-color="#9FB9CC" stop-opacity="0.07"/>
+          <stop offset="100%" stop-color="#9FB9CC" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Sky furniture: furthest away, so it barely moves -->
+      <g class="sp-terrain__layer" data-sp-depth="0.05">
+        <circle cx="1214" cy="214" r="104" fill="url(#sp-moonGlow)"/>
+        <circle cx="1214" cy="214" r="17" fill="#EAF3F9" opacity="0.82"/>
+        <g fill="#D7E8F5">
+          <circle cx="132"  cy="68"  r="1.2" opacity="0.6"/>
+          <circle cx="318"  cy="40"  r="0.9" opacity="0.4"/>
+          <circle cx="486"  cy="106" r="1.3" opacity="0.68"/>
+          <circle cx="654"  cy="54"  r="0.9" opacity="0.36"/>
+          <circle cx="792"  cy="122" r="1.1" opacity="0.54"/>
+          <circle cx="938"  cy="44"  r="0.8" opacity="0.4"/>
+          <circle cx="1348" cy="86"  r="1.1" opacity="0.5"/>
+          <circle cx="226"  cy="188" r="0.8" opacity="0.3"/>
+          <circle cx="576"  cy="206" r="0.9" opacity="0.34"/>
+          <circle cx="880"  cy="230" r="0.8" opacity="0.26"/>
+          <circle cx="74"   cy="292" r="0.8" opacity="0.24"/>
+          <circle cx="414"  cy="278" r="0.7" opacity="0.26"/>
+        </g>
+      </g>
+
+      <!-- Cloud bank. Drifts very slowly; CSS turns it off for reduced motion. -->
+      <g class="sp-terrain__layer sp-terrain__clouds" data-sp-depth="0.09">
+        <ellipse cx="250"  cy="372" rx="300" ry="42" fill="url(#sp-cloud)"/>
+        <ellipse cx="760"  cy="330" rx="250" ry="34" fill="url(#sp-cloud)"/>
+        <ellipse cx="1180" cy="392" rx="330" ry="46" fill="url(#sp-cloud)"/>
+        <ellipse cx="520"  cy="430" rx="280" ry="30" fill="url(#sp-cloud)"/>
+      </g>
+
+      <!-- Ridge 1: furthest, hazy, nearly dissolved into the sky -->
+      <g class="sp-terrain__layer" data-sp-depth="0.12">
+        <path d="M-80 430 C 60 392 160 340 280 358 C 400 376 470 420 590 396
+                 C 710 372 790 312 910 332 C 1030 352 1110 400 1230 380
+                 C 1340 362 1440 330 1520 344 L1520 900 L-80 900 Z"
+              fill="#2C4C68" opacity="0.42"/>
+        <rect x="-80" y="376" width="1600" height="104" fill="url(#sp-warmHaze)"/>
+      </g>
+
+      <!-- Ridge 2 -->
+      <g class="sp-terrain__layer" data-sp-depth="0.22">
+        <path d="M-80 512 C 70 472 190 424 320 446 C 460 470 540 516 670 492
+                 C 800 468 880 414 1010 438 C 1130 460 1220 508 1350 488
+                 C 1440 474 1490 460 1520 464 L1520 900 L-80 900 Z"
+              fill="#1C3C56" opacity="0.72"/>
+        <rect x="-80" y="476" width="1600" height="92" fill="url(#sp-haze)"/>
+      </g>
+
+      <!-- Ridge 3: the warm band sits here, where the light is coming from -->
+      <g class="sp-terrain__layer" data-sp-depth="0.36">
+        <path d="M-80 604 C 90 566 220 514 360 540 C 510 568 600 614 740 590
+                 C 870 568 960 512 1100 538 C 1230 562 1330 606 1440 588
+                 C 1490 580 1510 574 1520 576 L1520 900 L-80 900 Z"
+              fill="#122A40"/>
+        <rect x="-80" y="566" width="1600" height="88" fill="url(#sp-warmHaze)"/>
+      </g>
+
+      <!-- Ridge 4 -->
+      <g class="sp-terrain__layer" data-sp-depth="0.55">
+        <path d="M-80 706 C 120 672 300 622 470 650 C 640 678 740 722 910 700
+                 C 1060 680 1170 638 1330 662 C 1430 677 1490 692 1520 688
+                 L1520 900 L-80 900 Z"
+              fill="#0A1C2C"/>
+      </g>
+
+      <!-- Ridge 5: nearest, darkest, moves most -->
+      <g class="sp-terrain__layer" data-sp-depth="0.8">
+        <path d="M-80 812 C 160 786 380 804 580 816 C 780 828 980 798 1180 808
+                 C 1330 816 1450 826 1520 820 L1520 900 L-80 900 Z"
+              fill="#05101A"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="sp-terrain__inner sp-shell">
+
+    <div class="sp-terrain__intro">
+      <p class="sp-label sp-terrain__eyebrow">Six places &middot; one person &middot; pick anywhere</p>
+      <h1 class="sp-terrain__title" id="sp-terrain-title">Have a look around.</h1>
+    </div>
+
+    <!-- The waypoint field. Positions live in terrain.css. -->
+    <div class="sp-terrain__field" data-sp-field>
+      <p class="sp-visually-hidden">
+        Six places to explore. Each opens a short description with a link.
+        The same destinations are listed as ordinary links in the index below.
+      </p>
+
+      <!-- 1 ................................................................ -->
+      <button class="sp-terrain__waypoint" type="button"
+              data-sp-waypoint="shop" data-sp-kind="lamp"
+              aria-expanded="false" aria-controls="sp-card-shop">
+        <span class="sp-terrain__light" aria-hidden="true"></span>
+        <span class="sp-terrain__wp-text">
+          <span class="sp-terrain__wp-name">The Shop</span>
+          <span class="sp-terrain__wp-note">15 yrs of carpentry</span>
+        </span>
+      </button>
+
+      <div class="sp-terrain__card" id="sp-card-shop" data-sp-kind="lamp" data-sp-open="false">
+        <img class="sp-terrain__card-media" src="/assets/img/wp-shop.svg" alt="" width="640" height="400" loading="lazy">
+        <!-- PLACEHOLDER: carpentry photograph needed -->
+        <div class="sp-terrain__card-body">
+          <p class="sp-label sp-terrain__card-kicker">The Shop</p>
+          <h2 class="sp-terrain__card-title">Fifteen years with a tool belt</h2>
+          <p class="sp-terrain__card-text">
+            The longest thing I have ever done, and the one that explains the
+            rest. Measure twice, expect the wall to be out of plumb.
+          </p>
+          <a class="sp-terrain__card-link" href="/making/">Go there &rarr;</a>
+        </div>
+        <button class="sp-terrain__card-close" type="button" data-sp-close>
+          <span aria-hidden="true">&times;</span>
+          <span class="sp-visually-hidden">Close</span>
+        </button>
+      </div>
+
+      <!-- 2 ................................................................ -->
+      <button class="sp-terrain__waypoint" type="button"
+              data-sp-waypoint="launch" data-sp-kind="beacon"
+              aria-expanded="false" aria-controls="sp-card-launch">
+        <span class="sp-terrain__light" aria-hidden="true"></span>
+        <span class="sp-terrain__wp-text">
+          <span class="sp-terrain__wp-name">The Launch</span>
+          <span class="sp-terrain__wp-note">Flying since 2009</span>
+        </span>
+      </button>
+
+      <div class="sp-terrain__card" id="sp-card-launch" data-sp-kind="beacon" data-sp-open="false">
+        <img class="sp-terrain__card-media" src="/assets/img/wp-launch.jpg" alt="Paramotor silhouetted against a low sun over the ocean" width="960" height="540" loading="lazy">
+        <div class="sp-terrain__card-body">
+          <p class="sp-label sp-terrain__card-kicker">The Launch</p>
+          <h2 class="sp-terrain__card-title">Paragliding in the Blue Ridge</h2>
+          <p class="sp-terrain__card-text">
+            Flying since 2009, instructing since 2018. Most of what I know
+            about patience I learned waiting on a hill.
+          </p>
+          <a class="sp-terrain__card-link" href="/flying/">Go there &rarr;</a>
+        </div>
+        <button class="sp-terrain__card-close" type="button" data-sp-close>
+          <span aria-hidden="true">&times;</span>
+          <span class="sp-visually-hidden">Close</span>
+        </button>
+      </div>
+
+      <!-- 3 ................................................................ -->
+      <button class="sp-terrain__waypoint" type="button"
+              data-sp-waypoint="notebook" data-sp-kind="beacon"
+              aria-expanded="false" aria-controls="sp-card-notebook">
+        <span class="sp-terrain__light" aria-hidden="true"></span>
+        <span class="sp-terrain__wp-text">
+          <span class="sp-terrain__wp-name">The Notebook</span>
+          <span class="sp-terrain__wp-note">Writing &amp; notes</span>
+        </span>
+      </button>
+
+      <div class="sp-terrain__card" id="sp-card-notebook" data-sp-kind="beacon" data-sp-open="false">
+        <img class="sp-terrain__card-media" src="/assets/img/wp-notebook.jpg" alt="Wide beach and cloud bank at Playa Linda, Costa Rica" width="960" height="540" loading="lazy">
+        <div class="sp-terrain__card-body">
+          <p class="sp-label sp-terrain__card-kicker">The Notebook</p>
+          <h2 class="sp-terrain__card-title">Notes, when there is something worth saying</h2>
+          <p class="sp-terrain__card-text">
+            Occasional writing about building things, teaching people and
+            paying attention. No schedule, no newsletter.
+          </p>
+          <a class="sp-terrain__card-link" href="/notebook/">Go there &rarr;</a>
+        </div>
+        <button class="sp-terrain__card-close" type="button" data-sp-close>
+          <span aria-hidden="true">&times;</span>
+          <span class="sp-visually-hidden">Close</span>
+        </button>
+      </div>
+
+      <!-- 4 ................................................................ -->
+      <button class="sp-terrain__waypoint" type="button"
+              data-sp-waypoint="desk" data-sp-kind="lamp"
+              aria-expanded="false" aria-controls="sp-card-desk">
+        <span class="sp-terrain__light" aria-hidden="true"></span>
+        <span class="sp-terrain__wp-text">
+          <span class="sp-terrain__wp-name">The Desk</span>
+          <span class="sp-terrain__wp-note">Aktiga &middot; OTC</span>
+        </span>
+      </button>
+
+      <div class="sp-terrain__card" id="sp-card-desk" data-sp-kind="lamp" data-sp-open="false">
+        <img class="sp-terrain__card-media" src="/assets/img/wp-desk.jpg" alt="An Aktiga 3D web scene, rendered under a starfield" width="960" height="540" loading="lazy">
+        <div class="sp-terrain__card-body">
+          <p class="sp-label sp-terrain__card-kicker">The Desk</p>
+          <h2 class="sp-terrain__card-title">Aktiga, and the long detour that got me here</h2>
+          <p class="sp-terrain__card-text">
+            A software and product studio in Asheville, started in 2023 out of
+            Online Training Concepts, which I founded in 2019.
+          </p>
+          <a class="sp-terrain__card-link" href="/building/">Go there &rarr;</a>
+        </div>
+        <button class="sp-terrain__card-close" type="button" data-sp-close>
+          <span aria-hidden="true">&times;</span>
+          <span class="sp-visually-hidden">Close</span>
+        </button>
+      </div>
+
+      <!-- 5 ................................................................ -->
+      <button class="sp-terrain__waypoint" type="button"
+              data-sp-waypoint="studio" data-sp-kind="lamp"
+              aria-expanded="false" aria-controls="sp-card-studio">
+        <span class="sp-terrain__light" aria-hidden="true"></span>
+        <span class="sp-terrain__wp-text">
+          <span class="sp-terrain__wp-name">The Studio</span>
+          <span class="sp-terrain__wp-note">Keys &amp; mallets</span>
+        </span>
+      </button>
+
+      <div class="sp-terrain__card" id="sp-card-studio" data-sp-kind="lamp" data-sp-open="false">
+        <img class="sp-terrain__card-media" src="/assets/img/wp-studio.jpg" alt="Shane playing upright bass in a studio, black and white" width="960" height="540" loading="lazy">
+        <div class="sp-terrain__card-body">
+          <p class="sp-label sp-terrain__card-kicker">The Studio</p>
+          <h2 class="sp-terrain__card-title">Two bands, and a music degree I went back for</h2>
+          <p class="sp-terrain__card-text">
+            Keys and mallets. Soul and funk with one group, jazz fusion in odd
+            meters with another.
+          </p>
+          <a class="sp-terrain__card-link" href="/music/">Go there &rarr;</a>
+        </div>
+        <button class="sp-terrain__card-close" type="button" data-sp-close>
+          <span aria-hidden="true">&times;</span>
+          <span class="sp-visually-hidden">Close</span>
+        </button>
+      </div>
+
+      <!-- 6 ................................................................ -->
+      <button class="sp-terrain__waypoint" type="button"
+              data-sp-waypoint="rig" data-sp-kind="beacon"
+              aria-expanded="false" aria-controls="sp-card-rig">
+        <span class="sp-terrain__light" aria-hidden="true"></span>
+        <span class="sp-terrain__wp-text">
+          <span class="sp-terrain__wp-name">The Rig</span>
+          <span class="sp-terrain__wp-note">Sim racing</span>
+        </span>
+      </button>
+
+      <div class="sp-terrain__card" id="sp-card-rig" data-sp-kind="beacon" data-sp-open="false">
+        <img class="sp-terrain__card-media" src="/assets/img/wp-rig.svg" alt="" width="640" height="400" loading="lazy">
+        <!-- PLACEHOLDER: sim rig photograph needed -->
+        <div class="sp-terrain__card-body">
+          <p class="sp-label sp-terrain__card-kicker">The Rig</p>
+          <h2 class="sp-terrain__card-title">Sim racing, and what a wheel teaches about patience</h2>
+          <p class="sp-terrain__card-text">
+            The corner you rush is the corner you lose. The same lesson as the
+            hill, the job site and the release.
+          </p>
+          <a class="sp-terrain__card-link" href="/racing/">Go there &rarr;</a>
+        </div>
+        <button class="sp-terrain__card-close" type="button" data-sp-close>
+          <span aria-hidden="true">&times;</span>
+          <span class="sp-visually-hidden">Close</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sp-terrain__foot">
+      <span class="sp-terrain__hint sp-label">
+        <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"
+                  stroke-width="1.2" stroke-dasharray="2 4"/>
+          <circle cx="12" cy="12" r="3" fill="currentColor"/>
+        </svg>
+        Pick a light to see what it is
+      </span>
+      <span class="sp-label">Asheville, NC &nbsp;&middot;&nbsp; 35.5951&deg; N</span>
+    </div>
+  </div>
+</section>
