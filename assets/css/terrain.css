@@ -1,0 +1,401 @@
+/* ==========================================================================
+   terrain.css — Component 2: Interactive Terrain
+   --------------------------------------------------------------------------
+   Owns the layered landscape, the atmosphere, the six waypoints and their
+   cards. Depends only on the tokens in global.css.
+   Root class: .sp-terrain
+   ========================================================================== */
+
+.sp-terrain {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: clamp(34rem, 88vh, 58rem);
+  display: flex;
+  flex-direction: column;
+  /* Deep blue sky turning toward dawn, with the warm light low and to the
+     centre. Two layers: a warm glow at the horizon over a cool vertical
+     sky. The ridges in the SVG silhouette against it. */
+  background:
+    /* The warm light sits just under the far ridgeline, which is where the
+       visible horizon actually is once the near ridges cover the bottom of
+       the frame. Put it at the foot of the gradient and it never shows. */
+    radial-gradient(64% 30% at 52% 58%,
+      rgba(243, 171, 104, 0.52) 0%,
+      rgba(214, 133, 92, 0.26) 38%,
+      rgba(150, 110, 104, 0.09) 62%,
+      transparent 82%),
+    linear-gradient(180deg,
+      #050B18 0%,
+      #0A1C31 28%,
+      #143550 50%,
+      #1F4A68 72%,
+      #2E5E7C 100%);
+}
+
+/* Cloud bank drifting across the horizon. Slow enough that you notice it
+   only if you stay. */
+.sp-terrain__clouds { animation: sp-drift 90s linear infinite; }
+
+@keyframes sp-drift {
+  from { transform: translate3d(-3%, 0, 0); }
+  to   { transform: translate3d(3%, 0, 0); }
+}
+
+/* ---- The scene ------------------------------------------------------- */
+
+.sp-terrain__scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.sp-terrain__sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Each ridge group is translated by terrain.js for parallax.
+   will-change is set only while the pointer is active, by the script. */
+.sp-terrain__layer {
+  transition: transform var(--sp-dur-slow) var(--sp-ease-out);
+}
+
+/* ---- Foreground content --------------------------------------------- */
+
+.sp-terrain__inner {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* Top padding clears the absolutely-positioned header that sits over it. */
+  padding-block: var(--sp-space-9) var(--sp-space-6);
+}
+
+.sp-terrain__intro {
+  text-align: center;
+  max-width: 46rem;
+  margin-inline: auto;
+}
+
+.sp-terrain__eyebrow {
+  color: var(--sp-c-dim);
+  margin: 0 0 var(--sp-space-5);
+}
+
+.sp-terrain__title {
+  margin: 0;
+  font-size: var(--sp-text-hero);
+  font-weight: 200;
+  line-height: var(--sp-leading-tight);
+  letter-spacing: -0.03em;
+  color: var(--sp-c-bright);
+  text-wrap: balance;
+}
+
+/* ---- Waypoint field -------------------------------------------------- */
+
+.sp-terrain__field {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  margin-top: var(--sp-space-6);
+}
+
+.sp-terrain__waypoint {
+  position: absolute;
+  left: var(--sp-wp-x);
+  top: var(--sp-wp-y);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-space-3);
+  padding: var(--sp-space-2);
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+  transition: transform var(--sp-dur) var(--sp-ease);
+}
+
+.sp-terrain__waypoint:hover,
+.sp-terrain__waypoint:focus-visible {
+  transform: translate(-50%, calc(-50% - 3px));
+}
+
+/* The light itself */
+.sp-terrain__light {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sp-wp-colour);
+  box-shadow: 0 0 16px 4px var(--sp-wp-glow);
+  transition: box-shadow var(--sp-dur) var(--sp-ease),
+              transform var(--sp-dur) var(--sp-ease);
+}
+
+/* Slow out-of-sync pulse. Each waypoint gets its own delay inline. */
+.sp-terrain__light::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid var(--sp-wp-colour);
+  opacity: 0;
+  animation: sp-pulse 4.5s var(--sp-ease-out) infinite;
+  animation-delay: var(--sp-wp-delay, 0s);
+}
+
+@keyframes sp-pulse {
+  0%   { transform: scale(0.6); opacity: 0; }
+  35%  { opacity: 0.55; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+.sp-terrain__waypoint:hover .sp-terrain__light,
+.sp-terrain__waypoint:focus-visible .sp-terrain__light,
+.sp-terrain__waypoint[aria-expanded="true"] .sp-terrain__light {
+  transform: scale(1.35);
+  box-shadow: 0 0 26px 8px var(--sp-wp-glow);
+}
+
+.sp-terrain__wp-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.sp-terrain__wp-name {
+  font-family: var(--sp-font-mono);
+  font-size: var(--sp-text-2xs);
+  letter-spacing: var(--sp-tracking-wide);
+  text-transform: uppercase;
+  color: var(--sp-c-bright);
+  white-space: nowrap;
+}
+
+.sp-terrain__wp-note {
+  font-family: var(--sp-font-mono);
+  font-size: var(--sp-text-2xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sp-c-dim);
+  white-space: nowrap;
+}
+
+/* ---- Waypoint placement ----------------------------------------------
+   Positions are percentages of the field, so they hold at any width.
+   This is the ONLY place to move a light. Nothing lives inline in the HTML.
+   The delays stagger the pulse so the six never breathe in unison.
+   ---------------------------------------------------------------------- */
+
+.sp-terrain__waypoint[data-sp-waypoint="shop"]     { --sp-wp-x: 12%; --sp-wp-y: 56%; --sp-wp-delay: 0s;    }
+.sp-terrain__waypoint[data-sp-waypoint="launch"]   { --sp-wp-x: 29%; --sp-wp-y: 28%; --sp-wp-delay: 1.1s;  }
+.sp-terrain__waypoint[data-sp-waypoint="notebook"] { --sp-wp-x: 42%; --sp-wp-y: 80%; --sp-wp-delay: 2.3s;  }
+.sp-terrain__waypoint[data-sp-waypoint="desk"]     { --sp-wp-x: 57%; --sp-wp-y: 48%; --sp-wp-delay: 0.6s;  }
+.sp-terrain__waypoint[data-sp-waypoint="studio"]   { --sp-wp-x: 72%; --sp-wp-y: 70%; --sp-wp-delay: 1.75s; }
+.sp-terrain__waypoint[data-sp-waypoint="rig"]      { --sp-wp-x: 87%; --sp-wp-y: 36%; --sp-wp-delay: 3s;    }
+
+/* Two light colours carry meaning: warm is where things get made,
+   cool is where he goes. A visitor reads that before any label. */
+.sp-terrain__waypoint[data-sp-kind="lamp"],
+.sp-terrain__card[data-sp-kind="lamp"] {
+  --sp-wp-colour: var(--sp-c-lamp);
+  --sp-wp-glow: rgba(255, 196, 107, 0.42);
+}
+.sp-terrain__waypoint[data-sp-kind="beacon"],
+.sp-terrain__card[data-sp-kind="beacon"] {
+  --sp-wp-colour: var(--sp-c-beacon);
+  --sp-wp-glow: rgba(143, 227, 200, 0.40);
+}
+
+/* ---- Waypoint card --------------------------------------------------- */
+
+.sp-terrain__card {
+  position: absolute;
+  z-index: 5;
+  width: min(19.5rem, calc(100vw - 2.5rem));
+  background: var(--sp-c-panel);
+  border: 1px solid var(--sp-c-line);
+  border-top: 2px solid var(--sp-wp-colour, var(--sp-c-beacon));
+  backdrop-filter: blur(6px);
+  padding: 0;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity var(--sp-dur) var(--sp-ease),
+              transform var(--sp-dur) var(--sp-ease),
+              visibility 0s linear var(--sp-dur);
+}
+
+.sp-terrain__card[data-sp-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  transition-delay: 0s;
+}
+
+.sp-terrain__card-media {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  /* height:auto is load-bearing. The <img> carries width/height attributes
+     for layout stability, and those would otherwise beat aspect-ratio and
+     make the card far too tall to place. */
+  height: auto;
+  object-fit: cover;
+  background: var(--sp-c-deep);
+}
+
+.sp-terrain__card-body { padding: var(--sp-space-5); }
+
+.sp-terrain__card-kicker {
+  color: var(--sp-wp-colour, var(--sp-c-beacon));
+  margin: 0 0 var(--sp-space-3);
+}
+
+.sp-terrain__card-title {
+  margin: 0 0 var(--sp-space-3);
+  font-size: var(--sp-text-lg);
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--sp-c-bright);
+}
+
+.sp-terrain__card-text {
+  margin: 0 0 var(--sp-space-4);
+  font-size: var(--sp-text-sm);
+  line-height: 1.6;
+  color: var(--sp-c-muted);
+}
+
+.sp-terrain__card-link {
+  font-family: var(--sp-font-mono);
+  font-size: var(--sp-text-2xs);
+  letter-spacing: var(--sp-tracking-wide);
+  text-transform: uppercase;
+  color: var(--sp-c-beacon);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: border-color var(--sp-dur-fast) var(--sp-ease);
+}
+.sp-terrain__card-link:hover { border-bottom-color: currentColor; }
+
+.sp-terrain__card-close {
+  position: absolute;
+  top: var(--sp-space-2);
+  right: var(--sp-space-2);
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  background: rgba(7, 10, 20, 0.7);
+  border: 1px solid var(--sp-c-line);
+  border-radius: 50%;
+  color: var(--sp-c-text);
+  cursor: pointer;
+  line-height: 1;
+  font-size: 1rem;
+}
+.sp-terrain__card-close:hover { color: var(--sp-c-bright); border-color: var(--sp-c-dim); }
+
+/* ---- Footer strip ---------------------------------------------------- */
+
+.sp-terrain__foot {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-space-3) var(--sp-space-5);
+  color: var(--sp-c-dim);
+}
+
+.sp-terrain__hint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-space-3);
+}
+
+/* ==========================================================================
+   Below 900px — map mode becomes list mode.
+   The scene stays as atmosphere; the waypoints become a tappable grid so
+   the mechanic survives on a phone instead of being hidden.
+   ========================================================================== */
+@media (max-width: 899px) {
+  .sp-terrain { min-height: 0; }
+
+  .sp-terrain__field {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-space-3);
+    margin-top: var(--sp-space-7);
+  }
+
+  .sp-terrain__waypoint {
+    position: static;
+    transform: none;
+    flex-direction: row;
+    align-items: center;
+    /* Wide enough that the light's pulse ring, which scales to 2.4x, never
+       reaches the label. */
+    gap: var(--sp-space-5);
+    text-align: left;
+    padding: var(--sp-space-4);
+    border: 1px solid var(--sp-c-line);
+    background: rgba(8, 16, 28, 0.55);
+  }
+  .sp-terrain__waypoint:hover,
+  .sp-terrain__waypoint:focus-visible { transform: none; }
+
+  .sp-terrain__wp-name,
+  .sp-terrain__wp-note { white-space: normal; }
+
+  /* Base alignment is centred under the light. In list mode the text sits
+     beside it, so it has to start at the left edge or the second line runs
+     back underneath the dot. */
+  .sp-terrain__wp-text { align-items: flex-start; text-align: left; }
+
+  .sp-terrain__light { flex: none; }
+
+  /* Card becomes a bottom sheet */
+  .sp-terrain__card {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    top: auto !important;
+    transform: translate(-50%, 100%);
+    width: min(28rem, 100vw);
+    max-height: 82vh;
+    overflow-y: auto;
+  }
+  .sp-terrain__card[data-sp-open="true"] { transform: translate(-50%, 0); }
+}
+
+@media (max-width: 479px) {
+  .sp-terrain__field { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   Reduced motion — no parallax, no pulse, no slide. Everything still works.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .sp-terrain__layer { transform: none !important; }
+  .sp-terrain__clouds { animation: none; }
+  .sp-terrain__light::after { animation: none; }
+  .sp-terrain__card { transform: none; }
+  .sp-terrain__card[data-sp-open="true"] { transform: none; }
+}
