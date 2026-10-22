@@ -6,7 +6,7 @@
 
    Responsibilities, and nothing else:
      - pointer parallax on the ridge layers
-     - open / close waypoint cards (hover to peek, click to pin, keyboard)
+     - open / close waypoint cards (click or keyboard only, never hover)
      - position a card near its waypoint without ever covering it
      - honour prefers-reduced-motion and the 900px breakpoint
 
@@ -20,7 +20,6 @@
 
   var MAP_MODE_MIN = 900;      /* px — below this the layout is a list      */
   var PARALLAX_MAX = 26;       /* px — travel of the furthest-moving layer  */
-  var HOVER_CLOSE_DELAY = 180; /* ms — forgiveness when moving to the card  */
   var GAP = 18;                /* px — clearance between light and card     */
   var EDGE = 8;                /* px — clearance from the field edge        */
 
@@ -132,8 +131,6 @@
     if (!field || !waypoints.length) return;
 
     var openId = null;
-    var pinned = false;       /* true once opened by click or keyboard */
-    var closeTimer = null;
     var rafId = null;
     var target = { x: 0, y: 0 };
     var current = { x: 0, y: 0 };
@@ -216,7 +213,7 @@
         card.setAttribute("data-sp-open", "false");
         if (sheet.holds(card)) sheet.close();
       }
-      if (openId === id) { openId = null; pinned = false; }
+      if (openId === id) openId = null;
     }
 
     function closeAll() {
@@ -225,7 +222,7 @@
       });
     }
 
-    function open(button, pin, moveFocus) {
+    function open(button, moveFocus) {
       var id = button.getAttribute("data-sp-waypoint");
       var card = cardFor(button);
       if (!card) return;
@@ -249,23 +246,11 @@
 
       button.setAttribute("aria-expanded", "true");
       openId = id;
-      if (pin) pinned = true;
 
       if (moveFocus) {
         var first = card.querySelector("a, button");
         if (first) first.focus();
       }
-    }
-
-    function cancelClose() {
-      if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
-    }
-
-    function scheduleClose(id) {
-      cancelClose();
-      closeTimer = setTimeout(function () {
-        if (!pinned) close(id);
-      }, HOVER_CLOSE_DELAY);
     }
 
     /* ---- Wiring ------------------------------------------------------ */
@@ -274,37 +259,21 @@
       var id = button.getAttribute("data-sp-waypoint");
       var card = cardFor(button);
 
-      /* Hover peeks. Click pins, so the card survives the mouse leaving.
-         Clicking an already-pinned card closes it. */
+      /* Click opens, click again closes. Nothing opens on hover.
+
+         A panel that opens on hover cannot be reached by touch at all, it
+         fires by accident whenever the pointer crosses a light on its way
+         somewhere else, and it has no keyboard equivalent, so the same
+         gesture has to be reimplemented for focus and then kept in sync.
+         The hover reaction is left to CSS, which can animate the light
+         without committing the reader to anything. */
       button.addEventListener("click", function (event) {
         event.preventDefault();
-        if (openId === id && pinned) {
-          close(id);
-        } else {
-          open(button, true, false);
-        }
-      });
-
-      /* Mouse only. Touch fires click, so no phone user gets stuck in a
-         hover state that will not dismiss. */
-      button.addEventListener("pointerenter", function (event) {
-        if (event.pointerType !== "mouse" || !mapMode.matches) return;
-        cancelClose();
-        open(button, false, false);
-      });
-
-      button.addEventListener("pointerleave", function (event) {
-        if (event.pointerType !== "mouse" || !mapMode.matches) return;
-        scheduleClose(id);
+        if (openId === id) close(id);
+        else open(button, false);
       });
 
       if (card) {
-        card.addEventListener("pointerenter", cancelClose);
-        card.addEventListener("pointerleave", function (event) {
-          if (event.pointerType !== "mouse" || !mapMode.matches) return;
-          scheduleClose(id);
-        });
-
         var closeBtn = card.querySelector("[data-sp-close]");
         if (closeBtn) {
           closeBtn.addEventListener("click", function () {
@@ -340,13 +309,6 @@
       }
       closeAll();
     }, true);
-
-    /* Opening by keyboard should pin, so the card does not vanish. */
-    root.addEventListener("focusin", function (event) {
-      var button = event.target.closest && event.target.closest("[data-sp-waypoint]");
-      if (!button) return;
-      cancelClose();
-    });
 
     /* ---- Parallax ---------------------------------------------------- */
 
