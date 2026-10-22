@@ -95,34 +95,34 @@
     </div>
 
     <nav class="sp-menu__paths" aria-label="The six paths">
-      <a class="sp-menu__path" href="/making/" data-sp-kind="lamp">
+      <a class="sp-menu__path" href="/work/" data-sp-kind="lamp">
         <span class="sp-label sp-menu__num">01</span>
-        <span class="sp-menu__name">The Shop</span>
-        <span class="sp-menu__note">Fifteen years of carpentry</span>
-      </a>
-      <a class="sp-menu__path" href="/flying/" data-sp-kind="beacon">
-        <span class="sp-label sp-menu__num">02</span>
-        <span class="sp-menu__name">The Launch</span>
-        <span class="sp-menu__note">Paragliding and instructing</span>
-      </a>
-      <a class="sp-menu__path" href="/building/" data-sp-kind="lamp">
-        <span class="sp-label sp-menu__num">03</span>
-        <span class="sp-menu__name">The Desk</span>
+        <span class="sp-menu__name">Work</span>
         <span class="sp-menu__note">Aktiga and Online Training Concepts</span>
       </a>
-      <a class="sp-menu__path" href="/music/" data-sp-kind="lamp">
-        <span class="sp-label sp-menu__num">04</span>
-        <span class="sp-menu__name">The Studio</span>
+      <a class="sp-menu__path" href="/fly/" data-sp-kind="beacon">
+        <span class="sp-label sp-menu__num">02</span>
+        <span class="sp-menu__name">Fly</span>
+        <span class="sp-menu__note">Paragliding and instructing</span>
+      </a>
+      <a class="sp-menu__path" href="/play/" data-sp-kind="lamp">
+        <span class="sp-label sp-menu__num">03</span>
+        <span class="sp-menu__name">Play</span>
         <span class="sp-menu__note">Keys, mallets, two bands</span>
       </a>
-      <a class="sp-menu__path" href="/racing/" data-sp-kind="beacon">
-        <span class="sp-label sp-menu__num">05</span>
-        <span class="sp-menu__name">The Rig</span>
+      <a class="sp-menu__path" href="/drive/" data-sp-kind="beacon">
+        <span class="sp-label sp-menu__num">04</span>
+        <span class="sp-menu__name">Drive</span>
         <span class="sp-menu__note">Sim racing</span>
       </a>
-      <a class="sp-menu__path" href="/notebook/" data-sp-kind="beacon">
+      <a class="sp-menu__path" href="/build/" data-sp-kind="lamp">
+        <span class="sp-label sp-menu__num">05</span>
+        <span class="sp-menu__name">Build</span>
+        <span class="sp-menu__note">Fifteen years of carpentry</span>
+      </a>
+      <a class="sp-menu__path" href="/journal/" data-sp-kind="beacon">
         <span class="sp-label sp-menu__num">06</span>
-        <span class="sp-menu__name">The Notebook</span>
+        <span class="sp-menu__name">Journal</span>
         <span class="sp-menu__note">Writing and notes</span>
       </a>
     </nav>
@@ -130,7 +130,7 @@
     <nav class="sp-menu__more" aria-label="More">
       <a href="/">Home</a>
       <a href="/optimism/">Optimism</a>
-      <a href="/notebook/">Writing archive</a>
+      <a href="/journal/">Writing archive</a>
       <a href="mailto:shane@aktiga.com" data-sp-accent>shane@aktiga.com</a>
     </nav>
   </div>
@@ -260,26 +260,25 @@
 
       <!-- 1 ................................................................ -->
       <button class="sp-terrain__waypoint" type="button"
-              data-sp-waypoint="shop" data-sp-kind="lamp"
-              aria-expanded="false" aria-controls="sp-card-shop">
+              data-sp-waypoint="work" data-sp-kind="lamp"
+              aria-expanded="false" aria-controls="sp-card-work">
         <span class="sp-terrain__light" aria-hidden="true"></span>
         <span class="sp-terrain__wp-text">
-          <span class="sp-terrain__wp-name">The Shop</span>
-          <span class="sp-terrain__wp-note">15 yrs of carpentry</span>
+          <span class="sp-terrain__wp-name">Work</span>
+          <span class="sp-terrain__wp-note">Aktiga &middot; OTC</span>
         </span>
       </button>
 
-      <div class="sp-terrain__card" id="sp-card-shop" data-sp-kind="lamp" data-sp-open="false">
-        <img class="sp-terrain__card-media" src="/assets/img/wp-shop.svg" alt="" width="640" height="400" loading="lazy">
-        <!-- PLACEHOLDER: carpentry photograph needed -->
+      <div class="sp-terrain__card" id="sp-card-work" data-sp-kind="lamp" data-sp-open="false">
+        <img class="sp-terrain__card-media" src="/assets/img/wp-desk.jpg" alt="An Aktiga 3D web scene, rendered under a starfield" width="960" height="540" loading="lazy">
         <div class="sp-terrain__card-body">
-          <p class="sp-label sp-terrain__card-kicker">The Shop</p>
-          <h2 class="sp-terrain__card-title">Fifteen years with a tool belt</h2>
+          <p class="sp-label sp-terrain__card-kicker">Work</p>
+          <h2 class="sp-terrain__card-title">Aktiga, and the long detour that got me here</h2>
           <p class="sp-terrain__card-text">
-            The longest thing I have ever done, and the one that explains the
-            rest. Measure twice, expect the wall to be out of plumb.
+            A software and product studio in Asheville, started in 2023 out of
+            Online Training Concepts, which I founded in 2019.
           </p>
-          <a class="sp-terrain__card-link" href="/making/">Go to The Shop &rarr;</a>
+          <a class="sp-terrain__card-link" href="/work/" aria-label="Go to Work">Work &rarr;</a>
         </div>
         <button class="sp-terrain__card-close" type="button" data-sp-close>
           <span aria-hidden="true">&times;</span>
@@ -289,25 +288,25 @@
 
       <!-- 2 ................................................................ -->
       <button class="sp-terrain__waypoint" type="button"
-              data-sp-waypoint="launch" data-sp-kind="beacon"
-              aria-expanded="false" aria-controls="sp-card-launch">
+              data-sp-waypoint="fly" data-sp-kind="beacon"
+              aria-expanded="false" aria-controls="sp-card-fly">
         <span class="sp-terrain__light" aria-hidden="true"></span>
         <span class="sp-terrain__wp-text">
-          <span class="sp-terrain__wp-name">The Launch</span>
+          <span class="sp-terrain__wp-name">Fly</span>
           <span class="sp-terrain__wp-note">Flying since 2009</span>
         </span>
       </button>
 
-      <div class="sp-terrain__card" id="sp-card-launch" data-sp-kind="beacon" data-sp-open="false">
+      <div class="sp-terrain__card" id="sp-card-fly" data-sp-kind="beacon" data-sp-open="false">
         <img class="sp-terrain__card-media" src="/assets/img/wp-launch.jpg" alt="Paramotor silhouetted against a low sun over the ocean" width="960" height="540" loading="lazy">
         <div class="sp-terrain__card-body">
-          <p class="sp-label sp-terrain__card-kicker">The Launch</p>
+          <p class="sp-label sp-terrain__card-kicker">Fly</p>
           <h2 class="sp-terrain__card-title">Paragliding in the Blue Ridge</h2>
           <p class="sp-terrain__card-text">
             Flying since 2009, instructing since 2018. Most of what I know
             about patience I learned waiting on a hill.
           </p>
-          <a class="sp-terrain__card-link" href="/flying/">Go to The Launch &rarr;</a>
+          <a class="sp-terrain__card-link" href="/fly/" aria-label="Go to Fly">Fly &rarr;</a>
         </div>
         <button class="sp-terrain__card-close" type="button" data-sp-close>
           <span aria-hidden="true">&times;</span>
@@ -317,25 +316,25 @@
 
       <!-- 3 ................................................................ -->
       <button class="sp-terrain__waypoint" type="button"
-              data-sp-waypoint="notebook" data-sp-kind="beacon"
-              aria-expanded="false" aria-controls="sp-card-notebook">
+              data-sp-waypoint="play" data-sp-kind="lamp"
+              aria-expanded="false" aria-controls="sp-card-play">
         <span class="sp-terrain__light" aria-hidden="true"></span>
         <span class="sp-terrain__wp-text">
-          <span class="sp-terrain__wp-name">The Notebook</span>
-          <span class="sp-terrain__wp-note">Writing &amp; notes</span>
+          <span class="sp-terrain__wp-name">Play</span>
+          <span class="sp-terrain__wp-note">Keys &amp; mallets</span>
         </span>
       </button>
 
-      <div class="sp-terrain__card" id="sp-card-notebook" data-sp-kind="beacon" data-sp-open="false">
-        <img class="sp-terrain__card-media" src="/assets/img/wp-notebook.jpg" alt="Wide beach and cloud bank at Playa Linda, Costa Rica" width="960" height="540" loading="lazy">
+      <div class="sp-terrain__card" id="sp-card-play" data-sp-kind="lamp" data-sp-open="false">
+        <img class="sp-terrain__card-media" src="/assets/img/wp-studio.jpg" alt="Shane playing upright bass in a studio, black and white" width="960" height="540" loading="lazy">
         <div class="sp-terrain__card-body">
-          <p class="sp-label sp-terrain__card-kicker">The Notebook</p>
-          <h2 class="sp-terrain__card-title">Notes, when there is something worth saying</h2>
+          <p class="sp-label sp-terrain__card-kicker">Play</p>
+          <h2 class="sp-terrain__card-title">Two bands, and a music degree I went back for</h2>
           <p class="sp-terrain__card-text">
-            Occasional writing about building things, teaching people and
-            paying attention. No schedule, no newsletter.
+            Keys and mallets. Soul and funk with one group, jazz fusion in odd
+            meters with another.
           </p>
-          <a class="sp-terrain__card-link" href="/notebook/">Go to The Notebook &rarr;</a>
+          <a class="sp-terrain__card-link" href="/play/" aria-label="Go to Play">Play &rarr;</a>
         </div>
         <button class="sp-terrain__card-close" type="button" data-sp-close>
           <span aria-hidden="true">&times;</span>
@@ -345,53 +344,53 @@
 
       <!-- 4 ................................................................ -->
       <button class="sp-terrain__waypoint" type="button"
-              data-sp-waypoint="desk" data-sp-kind="lamp"
-              aria-expanded="false" aria-controls="sp-card-desk">
+              data-sp-waypoint="drive" data-sp-kind="beacon"
+              aria-expanded="false" aria-controls="sp-card-drive">
         <span class="sp-terrain__light" aria-hidden="true"></span>
         <span class="sp-terrain__wp-text">
-          <span class="sp-terrain__wp-name">The Desk</span>
-          <span class="sp-terrain__wp-note">Aktiga &middot; OTC</span>
+          <span class="sp-terrain__wp-name">Drive</span>
+          <span class="sp-terrain__wp-note">Sim racing</span>
         </span>
       </button>
 
-      <div class="sp-terrain__card" id="sp-card-desk" data-sp-kind="lamp" data-sp-open="false">
-        <img class="sp-terrain__card-media" src="/assets/img/wp-desk.jpg" alt="An Aktiga 3D web scene, rendered under a starfield" width="960" height="540" loading="lazy">
+      <div class="sp-terrain__card" id="sp-card-drive" data-sp-kind="beacon" data-sp-open="false">
+        <img class="sp-terrain__card-media" src="/assets/img/wp-rig.svg" alt="" width="640" height="400" loading="lazy">
+        <!-- PLACEHOLDER: sim rig photograph needed -->
         <div class="sp-terrain__card-body">
-          <p class="sp-label sp-terrain__card-kicker">The Desk</p>
-          <h2 class="sp-terrain__card-title">Aktiga, and the long detour that got me here</h2>
+          <p class="sp-label sp-terrain__card-kicker">Drive</p>
+          <h2 class="sp-terrain__card-title">Sim racing, and what a wheel teaches about patience</h2>
           <p class="sp-terrain__card-text">
-            A software and product studio in Asheville, started in 2023 out of
-            Online Training Concepts, which I founded in 2019.
+            The corner you rush is the corner you lose. The same lesson as the
+            hill, the job site and the release.
           </p>
-          <a class="sp-terrain__card-link" href="/building/">Go to The Desk &rarr;</a>
+          <a class="sp-terrain__card-link" href="/drive/" aria-label="Go to Drive">Drive &rarr;</a>
         </div>
         <button class="sp-terrain__card-close" type="button" data-sp-close>
           <span aria-hidden="true">&times;</span>
           <span class="sp-visually-hidden">Close</span>
         </button>
-      </div>
-
-      <!-- 5 ................................................................ -->
+      </div>      <!-- 5 ................................................................ -->
       <button class="sp-terrain__waypoint" type="button"
-              data-sp-waypoint="studio" data-sp-kind="lamp"
-              aria-expanded="false" aria-controls="sp-card-studio">
+              data-sp-waypoint="build" data-sp-kind="lamp"
+              aria-expanded="false" aria-controls="sp-card-build">
         <span class="sp-terrain__light" aria-hidden="true"></span>
         <span class="sp-terrain__wp-text">
-          <span class="sp-terrain__wp-name">The Studio</span>
-          <span class="sp-terrain__wp-note">Keys &amp; mallets</span>
+          <span class="sp-terrain__wp-name">Build</span>
+          <span class="sp-terrain__wp-note">15 yrs of carpentry</span>
         </span>
       </button>
 
-      <div class="sp-terrain__card" id="sp-card-studio" data-sp-kind="lamp" data-sp-open="false">
-        <img class="sp-terrain__card-media" src="/assets/img/wp-studio.jpg" alt="Shane playing upright bass in a studio, black and white" width="960" height="540" loading="lazy">
+      <div class="sp-terrain__card" id="sp-card-build" data-sp-kind="lamp" data-sp-open="false">
+        <img class="sp-terrain__card-media" src="/assets/img/wp-shop.svg" alt="" width="640" height="400" loading="lazy">
+        <!-- PLACEHOLDER: carpentry photograph needed -->
         <div class="sp-terrain__card-body">
-          <p class="sp-label sp-terrain__card-kicker">The Studio</p>
-          <h2 class="sp-terrain__card-title">Two bands, and a music degree I went back for</h2>
+          <p class="sp-label sp-terrain__card-kicker">Build</p>
+          <h2 class="sp-terrain__card-title">Fifteen years with a tool belt</h2>
           <p class="sp-terrain__card-text">
-            Keys and mallets. Soul and funk with one group, jazz fusion in odd
-            meters with another.
+            The longest thing I have ever done, and the one that explains the
+            rest. Measure twice, expect the wall to be out of plumb.
           </p>
-          <a class="sp-terrain__card-link" href="/music/">Go to The Studio &rarr;</a>
+          <a class="sp-terrain__card-link" href="/build/" aria-label="Go to Build">Build &rarr;</a>
         </div>
         <button class="sp-terrain__card-close" type="button" data-sp-close>
           <span aria-hidden="true">&times;</span>
@@ -401,32 +400,33 @@
 
       <!-- 6 ................................................................ -->
       <button class="sp-terrain__waypoint" type="button"
-              data-sp-waypoint="rig" data-sp-kind="beacon"
-              aria-expanded="false" aria-controls="sp-card-rig">
+              data-sp-waypoint="journal" data-sp-kind="beacon"
+              aria-expanded="false" aria-controls="sp-card-journal">
         <span class="sp-terrain__light" aria-hidden="true"></span>
         <span class="sp-terrain__wp-text">
-          <span class="sp-terrain__wp-name">The Rig</span>
-          <span class="sp-terrain__wp-note">Sim racing</span>
+          <span class="sp-terrain__wp-name">Journal</span>
+          <span class="sp-terrain__wp-note">Writing &amp; notes</span>
         </span>
       </button>
 
-      <div class="sp-terrain__card" id="sp-card-rig" data-sp-kind="beacon" data-sp-open="false">
-        <img class="sp-terrain__card-media" src="/assets/img/wp-rig.svg" alt="" width="640" height="400" loading="lazy">
-        <!-- PLACEHOLDER: sim rig photograph needed -->
+      <div class="sp-terrain__card" id="sp-card-journal" data-sp-kind="beacon" data-sp-open="false">
+        <img class="sp-terrain__card-media" src="/assets/img/wp-notebook.jpg" alt="Wide beach and cloud bank at Playa Linda, Costa Rica" width="960" height="540" loading="lazy">
         <div class="sp-terrain__card-body">
-          <p class="sp-label sp-terrain__card-kicker">The Rig</p>
-          <h2 class="sp-terrain__card-title">Sim racing, and what a wheel teaches about patience</h2>
+          <p class="sp-label sp-terrain__card-kicker">Journal</p>
+          <h2 class="sp-terrain__card-title">Notes, when there is something worth saying</h2>
           <p class="sp-terrain__card-text">
-            The corner you rush is the corner you lose. The same lesson as the
-            hill, the job site and the release.
+            Occasional writing about building things, teaching people and
+            paying attention. No schedule, no newsletter.
           </p>
-          <a class="sp-terrain__card-link" href="/racing/">Go to The Rig &rarr;</a>
+          <a class="sp-terrain__card-link" href="/journal/" aria-label="Go to Journal">Journal &rarr;</a>
         </div>
         <button class="sp-terrain__card-close" type="button" data-sp-close>
           <span aria-hidden="true">&times;</span>
           <span class="sp-visually-hidden">Close</span>
         </button>
       </div>
+
+
     </div>
 
     <div class="sp-terrain__foot">
@@ -478,28 +478,28 @@
     </div>
 
     <div class="sp-index__grid">
-      <a class="sp-index__item" href="/making/" data-sp-kind="lamp">
-        <span class="sp-label sp-index__kicker">01 &middot; The Shop</span>
-        <h3 class="sp-index__title">Fifteen years of carpentry, and everything it taught me</h3>
-      </a>
-      <a class="sp-index__item" href="/flying/" data-sp-kind="beacon">
-        <span class="sp-label sp-index__kicker">02 &middot; The Launch</span>
-        <h3 class="sp-index__title">Paragliding, instructing and a longstanding interest in flight</h3>
-      </a>
-      <a class="sp-index__item" href="/building/" data-sp-kind="lamp">
-        <span class="sp-label sp-index__kicker">03 &middot; The Desk</span>
+      <a class="sp-index__item" href="/work/" data-sp-kind="lamp">
+        <span class="sp-label sp-index__kicker">01 &middot; Work</span>
         <h3 class="sp-index__title">Aktiga, Online Training Concepts, and how I think about building</h3>
       </a>
-      <a class="sp-index__item" href="/music/" data-sp-kind="lamp">
-        <span class="sp-label sp-index__kicker">04 &middot; The Studio</span>
+      <a class="sp-index__item" href="/fly/" data-sp-kind="beacon">
+        <span class="sp-label sp-index__kicker">02 &middot; Fly</span>
+        <h3 class="sp-index__title">Paragliding, instructing and a longstanding interest in flight</h3>
+      </a>
+      <a class="sp-index__item" href="/play/" data-sp-kind="lamp">
+        <span class="sp-label sp-index__kicker">03 &middot; Play</span>
         <h3 class="sp-index__title">Two bands, keys and mallets</h3>
       </a>
-      <a class="sp-index__item" href="/racing/" data-sp-kind="beacon">
-        <span class="sp-label sp-index__kicker">05 &middot; The Rig</span>
+      <a class="sp-index__item" href="/drive/" data-sp-kind="beacon">
+        <span class="sp-label sp-index__kicker">04 &middot; Drive</span>
         <h3 class="sp-index__title">Sim racing, and what a wheel teaches about patience</h3>
       </a>
-      <a class="sp-index__item" href="/notebook/" data-sp-kind="beacon">
-        <span class="sp-label sp-index__kicker">06 &middot; The Notebook</span>
+      <a class="sp-index__item" href="/build/" data-sp-kind="lamp">
+        <span class="sp-label sp-index__kicker">05 &middot; Build</span>
+        <h3 class="sp-index__title">Fifteen years of carpentry, and everything it taught me</h3>
+      </a>
+      <a class="sp-index__item" href="/journal/" data-sp-kind="beacon">
+        <span class="sp-label sp-index__kicker">06 &middot; Journal</span>
         <h3 class="sp-index__title">Notes, when there is something worth saying</h3>
       </a>
     </div>
@@ -552,7 +552,7 @@
 
     </div>
 
-    <a class="sp-journal__more" href="/notebook/">All notes &rarr;</a>
+    <a class="sp-journal__more" href="/journal/">All notes &rarr;</a>
   </div>
 </section>
 </main>
@@ -568,17 +568,17 @@
     <nav class="sp-footer__map" aria-label="All sections">
       <div class="sp-footer__col">
         <p class="sp-label sp-footer__coltitle">Six paths</p>
-        <a href="/making/">The Shop</a>
-        <a href="/flying/">The Launch</a>
-        <a href="/building/">The Desk</a>
-        <a href="/music/">The Studio</a>
-        <a href="/racing/">The Rig</a>
-        <a href="/notebook/">The Notebook</a>
+        <a href="/work/">Work</a>
+        <a href="/fly/">Fly</a>
+        <a href="/play/">Play</a>
+        <a href="/drive/">Drive</a>
+        <a href="/build/">Build</a>
+        <a href="/journal/">Journal</a>
       </div>
       <div class="sp-footer__col">
         <p class="sp-label sp-footer__coltitle">More</p>
         <a href="/optimism/">Optimism</a>
-        <a href="/notebook/">Writing archive</a>
+        <a href="/journal/">Writing archive</a>
       </div>
       <div class="sp-footer__col">
         <p class="sp-label sp-footer__coltitle">Elsewhere</p>

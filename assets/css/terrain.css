@@ -204,12 +204,12 @@
    The delays stagger the pulse so the six never breathe in unison.
    ---------------------------------------------------------------------- */
 
-.sp-terrain__waypoint[data-sp-waypoint="shop"]     { --sp-wp-x: 12%; --sp-wp-y: 56%; --sp-wp-delay: 0s;    }
-.sp-terrain__waypoint[data-sp-waypoint="launch"]   { --sp-wp-x: 29%; --sp-wp-y: 28%; --sp-wp-delay: 1.1s;  }
-.sp-terrain__waypoint[data-sp-waypoint="notebook"] { --sp-wp-x: 42%; --sp-wp-y: 80%; --sp-wp-delay: 2.3s;  }
-.sp-terrain__waypoint[data-sp-waypoint="desk"]     { --sp-wp-x: 57%; --sp-wp-y: 48%; --sp-wp-delay: 0.6s;  }
-.sp-terrain__waypoint[data-sp-waypoint="studio"]   { --sp-wp-x: 72%; --sp-wp-y: 70%; --sp-wp-delay: 1.75s; }
-.sp-terrain__waypoint[data-sp-waypoint="rig"]      { --sp-wp-x: 87%; --sp-wp-y: 36%; --sp-wp-delay: 3s;    }
+.sp-terrain__waypoint[data-sp-waypoint="build"]     { --sp-wp-x: 12%; --sp-wp-y: 56%; --sp-wp-delay: 0s;    }
+.sp-terrain__waypoint[data-sp-waypoint="fly"]   { --sp-wp-x: 29%; --sp-wp-y: 28%; --sp-wp-delay: 1.1s;  }
+.sp-terrain__waypoint[data-sp-waypoint="journal"] { --sp-wp-x: 42%; --sp-wp-y: 80%; --sp-wp-delay: 2.3s;  }
+.sp-terrain__waypoint[data-sp-waypoint="work"]     { --sp-wp-x: 57%; --sp-wp-y: 48%; --sp-wp-delay: 0.6s;  }
+.sp-terrain__waypoint[data-sp-waypoint="play"]   { --sp-wp-x: 72%; --sp-wp-y: 70%; --sp-wp-delay: 1.75s; }
+.sp-terrain__waypoint[data-sp-waypoint="drive"]      { --sp-wp-x: 87%; --sp-wp-y: 36%; --sp-wp-delay: 3s;    }
 
 /* Two light colours carry meaning: warm is where things get made,
    cool is where he goes. A visitor reads that before any label. */
@@ -342,6 +342,29 @@ a.sp-terrain__card-link:focus-visible {
 }
 .sp-terrain__card-close:hover { color: var(--sp-c-bright); border-color: var(--sp-c-dim); }
 
+/* ---- Scrim behind the mobile sheet ----------------------------------- */
+
+/* A real element rather than a shadow on the card. It has to absorb the tap
+   that dismisses the sheet, and a shadow cannot take a tap. terrain.js
+   appends one to <body>, alongside the card it moves out of the section,
+   so neither of them sits under anything that could clip it. */
+.sp-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgba(4, 7, 15, 0.82);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--sp-dur) var(--sp-ease),
+              visibility 0s linear var(--sp-dur);
+}
+
+.sp-scrim[data-sp-scrim-open] {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
 /* ---- Footer strip ---------------------------------------------------- */
 
 .sp-terrain__foot {
@@ -403,12 +426,14 @@ a.sp-terrain__card-link:focus-visible {
 
   .sp-terrain__light { flex: none; }
 
-  /* Card becomes a bottom sheet */
+  /* Card becomes a bottom sheet. terrain.js moves it to <body> while it is
+     open, so it is a sibling of .sp-scrim and sits just above it. */
   .sp-terrain__card {
     position: fixed;
     left: 50%;
     bottom: 0;
     top: auto !important;
+    z-index: 71;
     transform: translate(-50%, 100%);
     width: min(28rem, 100vw);
     max-height: 82vh;
@@ -416,17 +441,11 @@ a.sp-terrain__card-link:focus-visible {
     /* Completely opaque on a phone. No blur to depend on, no bleed-through. */
     background: #0A1322;
     backdrop-filter: none;
+    /* Clear of the home indicator on a phone with no physical button. */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
-  /* Dim the page behind the sheet so nothing competes with the card.
-     A huge spread shadow rather than a ::before overlay: the card is a
-     containing block (it has a transform) and it scrolls its own overflow,
-     so a fixed pseudo-element gets clipped to the card and never covers the
-     page. An outer shadow is painted outside the border box and escapes both. */
-  .sp-terrain__card[data-sp-open="true"] {
-    transform: translate(-50%, 0);
-    box-shadow: 0 0 0 100vmax rgba(4, 7, 15, 0.78);
-  }
+  .sp-terrain__card[data-sp-open="true"] { transform: translate(-50%, 0); }
 }
 
 @media (max-width: 479px) {
