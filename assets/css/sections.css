@@ -14,26 +14,35 @@
    ========================================================================== */
 
 /* ==========================================================================
-   Component 1: Header
+   Component 1: Header + menu
    ========================================================================== */
 
-/* Floats over the top of the Terrain rather than pushing it down, so the
-   landscape still gets the full viewport height. */
+/* Fixed, so navigation is reachable from anywhere on a long page. It starts
+   transparent over the landscape and gains a background once you scroll,
+   which nav.js signals with data-sp-stuck. */
 .sp-header {
-  position: absolute;
+  position: fixed;
   top: 0;
   inset-inline: 0;
-  z-index: 10;
+  z-index: 60;
   background: transparent;
+  transition: background-color var(--sp-dur) var(--sp-ease),
+              border-color var(--sp-dur) var(--sp-ease);
+  border-bottom: 1px solid transparent;
+}
+
+.sp-header[data-sp-stuck] {
+  background: rgba(7, 10, 20, 0.88);
+  backdrop-filter: blur(10px);
+  border-bottom-color: var(--sp-c-line);
 }
 
 .sp-header__bar {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--sp-space-3) var(--sp-space-6);
-  padding-block: var(--sp-space-5);
+  gap: var(--sp-space-4);
+  padding-block: var(--sp-space-4);
 }
 
 .sp-header__brand {
@@ -45,10 +54,10 @@
   text-decoration: none;
 }
 
-.sp-header__nav {
+.sp-header__actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-space-2) var(--sp-space-5);
+  align-items: center;
+  gap: var(--sp-space-5);
 }
 
 .sp-header__link {
@@ -62,6 +71,177 @@
 }
 .sp-header__link:hover { color: var(--sp-c-bright); }
 .sp-header__link[data-sp-accent] { color: var(--sp-c-beacon); }
+
+/* ---- Burger ---------------------------------------------------------- */
+
+.sp-burger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-space-3);
+  padding: var(--sp-space-2) 0;
+  background: none;
+  border: 0;
+  color: var(--sp-c-bright);
+  cursor: pointer;
+  font: inherit;
+  /* 44px minimum target without a visible box */
+  min-height: 44px;
+}
+
+.sp-burger__box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 22px;
+  height: 14px;
+}
+
+.sp-burger__line {
+  display: block;
+  height: 1.5px;
+  width: 100%;
+  background: currentColor;
+  transition: transform var(--sp-dur) var(--sp-ease),
+              opacity var(--sp-dur-fast) var(--sp-ease);
+}
+
+.sp-burger__text {
+  font-family: var(--sp-font-mono);
+  font-size: var(--sp-text-2xs);
+  letter-spacing: var(--sp-tracking-wide);
+  text-transform: uppercase;
+}
+
+[aria-expanded="true"] .sp-burger__line:first-child { transform: translateY(3.25px) rotate(45deg); }
+[aria-expanded="true"] .sp-burger__line:last-child  { transform: translateY(-3.25px) rotate(-45deg); }
+
+/* ---- Menu panel ------------------------------------------------------ */
+
+.sp-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* Fully opaque. Nothing from the page behind should ever show through. */
+  background:
+    radial-gradient(90% 55% at 50% 100%, rgba(230, 158, 98, 0.12) 0%, transparent 70%),
+    linear-gradient(180deg, #05080F 0%, #0A1A2C 60%, #112A42 100%);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity var(--sp-dur) var(--sp-ease),
+              transform var(--sp-dur) var(--sp-ease),
+              visibility 0s linear var(--sp-dur);
+}
+
+.sp-menu[data-sp-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+
+.sp-menu__inner {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: var(--sp-space-9);
+  gap: var(--sp-space-6);
+}
+
+.sp-menu__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-space-4);
+}
+
+.sp-menu__eyebrow { margin: 0; color: var(--sp-c-dim); }
+
+.sp-menu__close {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 1px solid var(--sp-c-line);
+  border-radius: 50%;
+  color: var(--sp-c-bright);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.sp-menu__close:hover { border-color: var(--sp-c-dim); }
+
+.sp-menu__paths { display: grid; gap: 0; }
+
+.sp-menu__path {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  grid-template-areas: "num name" "num note";
+  column-gap: var(--sp-space-4);
+  align-items: baseline;
+  padding-block: var(--sp-space-4);
+  border-top: 1px solid var(--sp-c-line);
+  text-decoration: none;
+  transition: padding-inline-start var(--sp-dur) var(--sp-ease),
+              background-color var(--sp-dur-fast) var(--sp-ease);
+}
+.sp-menu__path:last-child { border-bottom: 1px solid var(--sp-c-line); }
+.sp-menu__path:hover,
+.sp-menu__path:focus-visible {
+  padding-inline-start: var(--sp-space-3);
+  background: rgba(21, 49, 74, 0.3);
+}
+
+.sp-menu__num { grid-area: num; color: var(--sp-c-beacon); }
+.sp-menu__path[data-sp-kind="lamp"] .sp-menu__num { color: var(--sp-c-lamp); }
+
+.sp-menu__name {
+  grid-area: name;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--sp-c-bright);
+}
+
+.sp-menu__note {
+  grid-area: note;
+  margin-top: var(--sp-space-1);
+  font-size: var(--sp-text-sm);
+  color: var(--sp-c-muted);
+}
+
+.sp-menu__more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-space-3) var(--sp-space-6);
+}
+.sp-menu__more a {
+  font-family: var(--sp-font-mono);
+  font-size: var(--sp-text-xs);
+  letter-spacing: var(--sp-tracking-wide);
+  text-transform: uppercase;
+  color: var(--sp-c-dim);
+  text-decoration: none;
+  padding-block: var(--sp-space-2);
+}
+.sp-menu__more a:hover { color: var(--sp-c-bright); }
+.sp-menu__more a[data-sp-accent] { color: var(--sp-c-beacon); text-transform: none; }
+
+/* Stops the page behind scrolling while the panel is open. */
+.sp-locked, .sp-locked body { overflow: hidden; }
+
+@media (max-width: 479px) {
+  /* The email and every path are in the panel, so the inline link is
+     redundant at the width where space is tightest. */
+  .sp-header__actions .sp-header__link { display: none; }
+  .sp-menu__path { grid-template-columns: 2.25rem minmax(0, 1fr); }
+}
 
 /* ==========================================================================
    Intro — a short first-person block under the landscape. The homepage does

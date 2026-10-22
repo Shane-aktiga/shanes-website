@@ -39,6 +39,9 @@
 <link rel="stylesheet" href="/assets/css/sections.css">
 <link rel="stylesheet" href="/assets/css/page.css">
 
+<!-- Navigation. Deferred, so it never blocks rendering. -->
+<script src="/assets/js/nav.js" defer></script>
+
 <!-- Google Analytics 4. One tag, one init, every page, via this partial. -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JKXQ06D3LQ"></script>
 <script>
@@ -53,17 +56,85 @@
 
 <a class="sp-skip" href="#sp-main">Skip to content</a>
 
-<!-- Component 1: Header. Shared by every page. -->
-<header class="sp-header">
+<!-- Component 1: Header + full navigation menu. Shared by every page.
+     Needs: assets/css/sections.css, assets/js/nav.js
+     The menu is the same at every screen size, so there is one set of
+     navigation to maintain and every page can reach every other page. -->
+
+<header class="sp-header" data-sp-header>
   <div class="sp-header__bar sp-shell">
     <a class="sp-header__brand" href="/">Shane Parreco</a>
-    <nav class="sp-header__nav" aria-label="Primary">
-      <a class="sp-header__link" href="/#sp-index">Explore</a>
-      <a class="sp-header__link" href="/notebook/">Notebook</a>
-      <a class="sp-header__link" href="#sp-footer" data-sp-accent>Say hello</a>
-    </nav>
+
+    <div class="sp-header__actions">
+      <a class="sp-header__link" href="/#sp-footer" data-sp-accent>Reach out</a>
+
+      <button class="sp-burger" type="button"
+              data-sp-menu-toggle
+              aria-expanded="false" aria-controls="sp-menu">
+        <span class="sp-burger__box" aria-hidden="true">
+          <span class="sp-burger__line"></span>
+          <span class="sp-burger__line"></span>
+        </span>
+        <span class="sp-burger__text">Menu</span>
+      </button>
+    </div>
   </div>
 </header>
+
+<!-- The panel. Lives outside <main> so it can be a full-screen overlay. -->
+<div class="sp-menu" id="sp-menu" data-sp-menu data-sp-open="false"
+     aria-label="Site navigation">
+  <div class="sp-menu__inner sp-shell">
+
+    <div class="sp-menu__head">
+      <p class="sp-label sp-menu__eyebrow">Six paths</p>
+      <button class="sp-menu__close" type="button" data-sp-menu-close>
+        <span aria-hidden="true">&times;</span>
+        <span class="sp-visually-hidden">Close menu</span>
+      </button>
+    </div>
+
+    <nav class="sp-menu__paths" aria-label="The six paths">
+      <a class="sp-menu__path" href="/making/" data-sp-kind="lamp">
+        <span class="sp-label sp-menu__num">01</span>
+        <span class="sp-menu__name">The Shop</span>
+        <span class="sp-menu__note">Fifteen years of carpentry</span>
+      </a>
+      <a class="sp-menu__path" href="/flying/" data-sp-kind="beacon">
+        <span class="sp-label sp-menu__num">02</span>
+        <span class="sp-menu__name">The Launch</span>
+        <span class="sp-menu__note">Paragliding and instructing</span>
+      </a>
+      <a class="sp-menu__path" href="/building/" data-sp-kind="lamp">
+        <span class="sp-label sp-menu__num">03</span>
+        <span class="sp-menu__name">The Desk</span>
+        <span class="sp-menu__note">Aktiga and Online Training Concepts</span>
+      </a>
+      <a class="sp-menu__path" href="/music/" data-sp-kind="lamp">
+        <span class="sp-label sp-menu__num">04</span>
+        <span class="sp-menu__name">The Studio</span>
+        <span class="sp-menu__note">Keys, mallets, two bands</span>
+      </a>
+      <a class="sp-menu__path" href="/racing/" data-sp-kind="beacon">
+        <span class="sp-label sp-menu__num">05</span>
+        <span class="sp-menu__name">The Rig</span>
+        <span class="sp-menu__note">Sim racing</span>
+      </a>
+      <a class="sp-menu__path" href="/notebook/" data-sp-kind="beacon">
+        <span class="sp-label sp-menu__num">06</span>
+        <span class="sp-menu__name">The Notebook</span>
+        <span class="sp-menu__note">Writing and notes</span>
+      </a>
+    </nav>
+
+    <nav class="sp-menu__more" aria-label="More">
+      <a href="/">Home</a>
+      <a href="/optimism/">Optimism</a>
+      <a href="/notebook/">Writing archive</a>
+      <a href="mailto:shane@aktiga.com" data-sp-accent>shane@aktiga.com</a>
+    </nav>
+  </div>
+</div>
 
 <main id="sp-main">
 
@@ -138,7 +209,7 @@
 
     <nav class="sp-footer__map" aria-label="All sections">
       <div class="sp-footer__col">
-        <p class="sp-label sp-footer__coltitle">Six places</p>
+        <p class="sp-label sp-footer__coltitle">Six paths</p>
         <a href="/making/">The Shop</a>
         <a href="/flying/">The Launch</a>
         <a href="/building/">The Desk</a>

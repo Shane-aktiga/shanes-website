@@ -79,6 +79,16 @@
       var maxTop = (hostBox.bottom - fieldBox.top) - cardH - EDGE;
       var maxLeft = fieldBox.width - cardW - EDGE;
 
+      /* The header is fixed, so it owns the top strip of the viewport no
+         matter where the section has scrolled to. Keep the card clear of it,
+         or a card opened from a high waypoint slides under the brand and the
+         menu button and swallows the only navigation on the page. */
+      var header = document.querySelector("[data-sp-header]");
+      if (header) {
+        minTop = Math.max(minTop, header.offsetHeight + EDGE - fieldBox.top);
+      }
+      if (maxTop < minTop) maxTop = minTop;
+
       var left = clamp(cx - cardW / 2, EDGE, maxLeft);
       var top;
 
@@ -209,8 +219,21 @@
 
     document.addEventListener("click", function (event) {
       if (!openId) return;
-      if (!root.contains(event.target)) closeAll();
-    });
+      var card = root.querySelector("#sp-card-" + openId);
+      if (card && card.contains(event.target)) return;
+      if (event.target.closest && event.target.closest("[data-sp-waypoint]")) return;
+
+      /* On a phone the card is a bottom sheet sitting over a dimmed page, so
+         a tap outside it should dismiss it and do nothing else. Capture
+         phase and preventDefault, or the same tap also activates whatever
+         link happens to be under the dimming and navigates away, which is
+         not what anyone meant by tapping the greyed-out part of a page. */
+      if (!mapMode.matches) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      closeAll();
+    }, true);
 
     /* Opening by keyboard should pin, so the card does not vanish. */
     root.addEventListener("focusin", function (event) {
