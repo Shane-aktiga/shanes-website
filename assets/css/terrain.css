@@ -131,9 +131,22 @@
   transition: transform var(--sp-dur) var(--sp-ease);
 }
 
-.sp-terrain__waypoint:hover,
-.sp-terrain__waypoint:focus-visible {
+/* Hover is a reaction, not a trigger. It says the light is pressable and
+   nothing more: the card opens on click, and only on click.
+
+   The raised look is shared by three states, so a keyboard user and a mouse
+   user see the same thing and an open waypoint stays visibly picked. The
+   :hover half is guarded by (hover: hover), so a touch device cannot latch
+   into a hover state it has no way to leave. */
+.sp-terrain__waypoint:focus-visible,
+.sp-terrain__waypoint[aria-expanded="true"] {
   transform: translate(-50%, calc(-50% - 3px));
+}
+
+@media (hover: hover) {
+  .sp-terrain__waypoint:hover {
+    transform: translate(-50%, calc(-50% - 3px));
+  }
 }
 
 /* The light itself */
@@ -166,11 +179,25 @@
   100% { transform: scale(2.4); opacity: 0; }
 }
 
-.sp-terrain__waypoint:hover .sp-terrain__light,
 .sp-terrain__waypoint:focus-visible .sp-terrain__light,
 .sp-terrain__waypoint[aria-expanded="true"] .sp-terrain__light {
   transform: scale(1.35);
   box-shadow: 0 0 26px 8px var(--sp-wp-glow);
+}
+
+.sp-terrain__waypoint:focus-visible .sp-terrain__wp-note,
+.sp-terrain__waypoint[aria-expanded="true"] .sp-terrain__wp-note {
+  color: var(--sp-c-text);
+}
+
+@media (hover: hover) {
+  .sp-terrain__waypoint:hover .sp-terrain__light {
+    transform: scale(1.35);
+    box-shadow: 0 0 26px 8px var(--sp-wp-glow);
+  }
+  .sp-terrain__waypoint:hover .sp-terrain__wp-note {
+    color: var(--sp-c-text);
+  }
 }
 
 .sp-terrain__wp-text {
@@ -196,6 +223,7 @@
   text-transform: uppercase;
   color: var(--sp-c-dim);
   white-space: nowrap;
+  transition: color var(--sp-dur) var(--sp-ease);
 }
 
 /* ---- Waypoint placement ----------------------------------------------
@@ -413,8 +441,13 @@ a.sp-terrain__card-link:focus-visible {
     border: 1px solid var(--sp-c-line);
     background: rgba(8, 16, 28, 0.55);
   }
+  /* In list mode the waypoints are laid out in a grid, so the raised
+     translate from map mode would shove them sideways. The light still
+     scales and the name still brightens, which is all the feedback a row
+     needs. [aria-expanded] is in here too, or an open row would jump. */
   .sp-terrain__waypoint:hover,
-  .sp-terrain__waypoint:focus-visible { transform: none; }
+  .sp-terrain__waypoint:focus-visible,
+  .sp-terrain__waypoint[aria-expanded="true"] { transform: none; }
 
   .sp-terrain__wp-name,
   .sp-terrain__wp-note { white-space: normal; }
