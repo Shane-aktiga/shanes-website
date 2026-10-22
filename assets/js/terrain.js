@@ -32,6 +32,98 @@
     return Math.min(Math.max(value, min), max);
   }
 
+  /* ----------------------------------------------------------------------
+     The mobile bottom sheet.
+
+     iOS Safari treats `overflow: hidden` on an ancestor as grounds to
+     contain and clip a position:fixed descendant instead of letting it
+     anchor to the viewport. .sp-terrain carries overflow:hidden for the
+     ridge artwork, so on an iPhone the open card was never actually
+     fixed: it moved with the section, and the sections below it painted
+     straight over the top. Chromium follows the spec here, which is why
+     this only ever showed up on a real phone.
+
+     So do not fight it with z-index. While a card is a sheet it is moved
+     out to <body>, where no ancestor can clip or contain it, and put back
+     when it closes. The page behind is scroll-locked and covered by a
+     real scrim element, which also gives the tap-to-dismiss a target.
+     ---------------------------------------------------------------------- */
+
+  var SHEET_EXIT = 340;   /* ms — a shade longer than --sp-dur (320ms) */
+
+  var sheet = (function () {
+    var scrim = null, card = null, home = null, dismiss = null;
+    var scrollY = 0, restoreTimer = null;
+
+    function ensureScrim() {
+      if (scrim) return scrim;
+      scrim = document.createElement("div");
+      scrim.className = "sp-scrim";
+      scrim.setAttribute("data-sp-scrim", "");
+      scrim.addEventListener("click", function () { if (dismiss) dismiss(); });
+      document.body.appendChild(scrim);
+      return scrim;
+    }
+
+    /* Locking with overflow:hidden alone is unreliable on iOS. Pinning the
+       body and offsetting it by the scroll position is what actually holds,
+       so remember the offset and put it back on release. */
+    function lock() {
+      scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var b = document.body;
+      b.style.position = "fixed";
+      b.style.top = -scrollY + "px";
+      b.style.left = "0";
+      b.style.right = "0";
+      b.style.width = "100%";
+    }
+
+    function unlock() {
+      var b = document.body;
+      b.style.position = "";
+      b.style.top = "";
+      b.style.left = "";
+      b.style.right = "";
+      b.style.width = "";
+      window.scrollTo(0, scrollY);
+    }
+
+    function putBack() {
+      if (restoreTimer) { clearTimeout(restoreTimer); restoreTimer = null; }
+      if (card && home && home.parent) home.parent.insertBefore(card, home.next);
+      card = null;
+      home = null;
+    }
+
+    return {
+      holds: function (el) { return card === el; },
+      open: function (el, onDismiss) {
+        if (card === el) return;
+        if (card) putBack();
+        home = { parent: el.parentNode, next: el.nextSibling };
+        card = el;
+        dismiss = onDismiss;
+        ensureScrim().setAttribute("data-sp-scrim-open", "");
+        document.body.appendChild(el);
+        lock();
+      },
+      /* Release the page at once so it is usable again, but leave the card
+         in <body> until its exit transition has finished, or it jumps back
+         into the section mid-animation. */
+      close: function () {
+        if (!card) return;
+        dismiss = null;
+        if (scrim) scrim.removeAttribute("data-sp-scrim-open");
+        unlock();
+        var leaving = card;
+        if (restoreTimer) clearTimeout(restoreTimer);
+        restoreTimer = setTimeout(function () {
+          if (card === leaving && leaving.getAttribute("data-sp-open") !== "true") putBack();
+        }, SHEET_EXIT);
+      }
+    };
+  })();
+
   function init(root) {
     var scene     = root.querySelector("[data-sp-scene]");
     var field     = root.querySelector("[data-sp-field]");
@@ -48,10 +140,12 @@
 
     /* ---- Cards ------------------------------------------------------- */
 
+    /* document, not root: an open sheet has been moved out to <body> and
+       is no longer a descendant of this terrain section. */
     function cardFor(button) {
       var id = button.getAttribute("aria-controls");
       if (!id) return null;
-      return root.querySelector("#" + (window.CSS && CSS.escape ? CSS.escape(id) : id));
+      return document.getElementById(id);
     }
 
     /* Put the card above the light, else below it, else beside it.
@@ -118,7 +212,10 @@
       if (!button) return;
       var card = cardFor(button);
       button.setAttribute("aria-expanded", "false");
-      if (card) card.setAttribute("data-sp-open", "false");
+      if (card) {
+        card.setAttribute("data-sp-open", "false");
+        if (sheet.holds(card)) sheet.close();
+      }
       if (openId === id) { openId = null; pinned = false; }
     }
 
@@ -135,11 +232,20 @@
 
       if (openId && openId !== id) close(openId);
 
-      /* Lay it out so it can be measured, without a visible flash. */
-      card.style.visibility = "hidden";
-      card.setAttribute("data-sp-open", "true");
-      placeCard(button, card);
-      card.style.visibility = "";
+      if (!mapMode.matches) {
+        /* Sheet mode. Move it to <body> first, then let a frame pass so the
+           slide-in actually animates from its new home. */
+        sheet.open(card, function () { close(id); });
+        requestAnimationFrame(function () {
+          if (openId === id) card.setAttribute("data-sp-open", "true");
+        });
+      } else {
+        /* Lay it out so it can be measured, without a visible flash. */
+        card.style.visibility = "hidden";
+        card.setAttribute("data-sp-open", "true");
+        placeCard(button, card);
+        card.style.visibility = "";
+      }
 
       button.setAttribute("aria-expanded", "true");
       openId = id;
