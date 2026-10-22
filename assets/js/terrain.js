@@ -294,7 +294,12 @@
 
     document.addEventListener("click", function (event) {
       if (!openId) return;
-      var card = root.querySelector("#sp-card-" + openId);
+      /* getElementById, not root.querySelector: in sheet mode the open card
+         has been moved out to <body>, so looking for it inside this section
+         finds nothing. When that happened the guard below never matched, and
+         a tap on the card's own button counted as a tap on the backdrop:
+         preventDefault, then close, and no navigation. */
+      var card = document.getElementById("sp-card-" + openId);
       if (card && card.contains(event.target)) return;
       if (event.target.closest && event.target.closest("[data-sp-waypoint]")) return;
 
