@@ -294,7 +294,10 @@
 
 .sp-index__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  /* 14rem, not 13: at 13 a wide screen fits five columns, which left the
+     seventh path stranded in a row of two beside three empty cells. Four
+     columns wrap seven items as 4 + 3, which reads as a block. */
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   gap: var(--sp-space-4);
 }
 

@@ -238,6 +238,7 @@
 .sp-terrain__waypoint[data-sp-waypoint="work"]     { --sp-wp-x: 57%; --sp-wp-y: 48%; --sp-wp-delay: 0.6s;  }
 .sp-terrain__waypoint[data-sp-waypoint="play"]   { --sp-wp-x: 72%; --sp-wp-y: 70%; --sp-wp-delay: 1.75s; }
 .sp-terrain__waypoint[data-sp-waypoint="drive"]      { --sp-wp-x: 87%; --sp-wp-y: 36%; --sp-wp-delay: 3s;    }
+.sp-terrain__waypoint[data-sp-waypoint="optimism"]   { --sp-wp-x: 46%; --sp-wp-y: 14%; --sp-wp-delay: 2.1s;  }
 
 /* Two light colours carry meaning: warm is where things get made,
    cool is where he goes. A visitor reads that before any label. */
@@ -426,6 +427,10 @@ a.sp-terrain__card-link:focus-visible {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--sp-space-3);
     margin-top: var(--sp-space-7);
+    /* In map mode the hint sits in open sky well clear of the lights. In
+       list mode it lands directly under the last row, which reads as part
+       of that row rather than as a caption for the set. */
+    margin-bottom: var(--sp-space-7);
   }
 
   .sp-terrain__waypoint {
