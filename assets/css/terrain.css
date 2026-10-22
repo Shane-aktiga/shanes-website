@@ -101,7 +101,13 @@
 
 .sp-terrain__field {
   position: relative;
-  z-index: 2;
+  /* 3, not 2, and the 3 is load-bearing. This is a flex item of
+     .sp-terrain__inner, and z-index applies to flex items even when they are
+     position:static, so this value makes the field its own stacking context.
+     At 2 it tied with .sp-terrain__foot and lost on DOM order, which meant an
+     open card (z-index 5 *inside* this context) was painted under the footer
+     strip and the footer text read straight through it. */
+  z-index: 3;
   flex: 1;
   margin-top: var(--sp-space-6);
 }
@@ -224,7 +230,9 @@
   position: absolute;
   z-index: 5;
   width: min(19.5rem, calc(100vw - 2.5rem));
-  background: var(--sp-c-panel);
+  /* Near-solid. Legibility beats the glass effect: at 0.92 the landscape
+     and the headline behind it were reading through the copy. */
+  background: rgba(8, 15, 28, 0.985);
   border: 1px solid var(--sp-c-line);
   border-top: 2px solid var(--sp-wp-colour, var(--sp-c-beacon));
   backdrop-filter: blur(6px);
@@ -279,18 +287,42 @@
   color: var(--sp-c-muted);
 }
 
-.sp-terrain__card-link {
+/* The whole point of the card is to send you somewhere, so this is a real
+   button, not a line of small caps. Full width of the card at every size,
+   because the card is never wide, and 3rem tall so it clears the 44px
+   minimum touch target with room to spare. It takes the waypoint's own
+   colour, which keeps the warm/cool split reading all the way through.
+
+   The `a` in the selector is load-bearing: global.css carries
+   `.sp-page a { color: inherit }` at specificity 0,1,1, which beats a bare
+   class and would leave pale body text sitting on the bright fill. */
+a.sp-terrain__card-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-space-3);
+  width: 100%;
+  min-height: 3rem;
+  padding: var(--sp-space-3) var(--sp-space-5);
   font-family: var(--sp-font-mono);
-  font-size: var(--sp-text-2xs);
+  font-size: var(--sp-text-xs);
   letter-spacing: var(--sp-tracking-wide);
   text-transform: uppercase;
-  color: var(--sp-c-beacon);
+  text-align: center;
   text-decoration: none;
-  border-bottom: 1px solid transparent;
-  padding-bottom: 2px;
-  transition: border-color var(--sp-dur-fast) var(--sp-ease);
+  color: var(--sp-c-deep);
+  background: var(--sp-wp-colour, var(--sp-c-beacon));
+  border: 1px solid var(--sp-wp-colour, var(--sp-c-beacon));
+  border-radius: var(--sp-radius);
+  transition: background var(--sp-dur-fast) var(--sp-ease),
+              color var(--sp-dur-fast) var(--sp-ease);
 }
-.sp-terrain__card-link:hover { border-bottom-color: currentColor; }
+
+a.sp-terrain__card-link:hover,
+a.sp-terrain__card-link:focus-visible {
+  background: transparent;
+  color: var(--sp-wp-colour, var(--sp-c-beacon));
+}
 
 .sp-terrain__card-close {
   position: absolute;
@@ -381,8 +413,20 @@
     width: min(28rem, 100vw);
     max-height: 82vh;
     overflow-y: auto;
+    /* Completely opaque on a phone. No blur to depend on, no bleed-through. */
+    background: #0A1322;
+    backdrop-filter: none;
   }
-  .sp-terrain__card[data-sp-open="true"] { transform: translate(-50%, 0); }
+
+  /* Dim the page behind the sheet so nothing competes with the card.
+     A huge spread shadow rather than a ::before overlay: the card is a
+     containing block (it has a transform) and it scrolls its own overflow,
+     so a fixed pseudo-element gets clipped to the card and never covers the
+     page. An outer shadow is painted outside the border box and escapes both. */
+  .sp-terrain__card[data-sp-open="true"] {
+    transform: translate(-50%, 0);
+    box-shadow: 0 0 0 100vmax rgba(4, 7, 15, 0.78);
+  }
 }
 
 @media (max-width: 479px) {
