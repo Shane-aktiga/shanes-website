@@ -176,8 +176,10 @@
 
       <!-- Sky furniture: furthest away, so it barely moves -->
       <g class="sp-terrain__layer" data-sp-depth="0.05">
-        <circle cx="1214" cy="214" r="104" fill="url(#sp-moonGlow)"/>
-        <circle cx="1214" cy="214" r="17" fill="#EAF3F9" opacity="0.82"/>
+        <!-- Upper left, below the wordmark. It used to sit top right,
+             where the glow ran under "Reach out" in the header. -->
+        <circle cx="210" cy="470" r="104" fill="url(#sp-moonGlow)"/>
+        <circle cx="210" cy="470" r="17" fill="#EAF3F9" opacity="0.82"/>
         <g fill="#D7E8F5">
           <circle cx="132"  cy="68"  r="1.2" opacity="0.6"/>
           <circle cx="318"  cy="40"  r="0.9" opacity="0.4"/>
@@ -512,7 +514,7 @@
       </a>
       <a class="sp-index__item" href="/play/" data-sp-kind="lamp">
         <span class="sp-label sp-index__kicker">03 &middot; Play</span>
-        <h3 class="sp-index__title">Drums, Keys, Mallets, and a love of playing live</h3>
+        <h3 class="sp-index__title">Drums, Keys, Mallets, and a love of playing live music</h3>
       </a>
       <a class="sp-index__item" href="/drive/" data-sp-kind="beacon">
         <span class="sp-label sp-index__kicker">04 &middot; Drive</span>
