@@ -64,6 +64,58 @@
   transition: transform var(--sp-dur-slow) var(--sp-ease-out);
 }
 
+/* ---- The moon -------------------------------------------------------- */
+
+/* Deliberately not inside the sky SVG, for two reasons.
+
+   That SVG is preserveAspectRatio="xMidYMax slice": anchored to the bottom
+   and scaled to cover, so anything inside it drifts vertically as the
+   viewport height changes. That drift is what kept walking the moon into
+   the header on short windows. Positioned from the top here, it stays put.
+
+   It also sat in the first layer of the SVG, which meant every ridge drawn
+   after it painted over the top. As a sibling after the SVG it is in front
+   of all of them.
+
+   It stays behind .sp-terrain__inner, where the headline and the lights
+   live. A 200px glow over the type would wash it out, and sitting upper
+   left it does not reach the centred headline anyway. */
+.sp-terrain__moon {
+  position: absolute;
+  z-index: 1;
+  top: clamp(5.5rem, 9vh, 7rem);
+  left: clamp(1rem, 5vw, 8rem);
+  width: clamp(9rem, 15vw, 13rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  /* Same stops the SVG gradient used, so the glow is unchanged. */
+  background: radial-gradient(circle closest-side,
+    rgba(220, 234, 244, 0.42) 0%,
+    rgba(168, 198, 218, 0.10) 55%,
+    rgba(168, 198, 218, 0) 100%);
+}
+
+/* Map mode only. Below 900px the headline is centred and nearly full
+   width, so an upper-left moon ends up behind the type. It was not visible
+   on a phone before this change either: inside the sliced SVG it was simply
+   cropped off the edge. Hiding it here keeps that, on purpose rather than
+   by accident. */
+@media (max-width: 899px) {
+  .sp-terrain__moon { display: none; }
+}
+
+/* The disc. inset 42% leaves 16% of the glow's width, which is the old
+   r17 inside r104. */
+.sp-terrain__moon::after {
+  content: "";
+  position: absolute;
+  inset: 42%;
+  border-radius: 50%;
+  background: #EAF3F9;
+  opacity: 0.82;
+}
+
 /* ---- Foreground content --------------------------------------------- */
 
 .sp-terrain__inner {

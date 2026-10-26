@@ -10,11 +10,6 @@
     <svg class="sp-terrain__sky" viewBox="0 0 1440 900"
          preserveAspectRatio="xMidYMax slice" focusable="false">
       <defs>
-        <radialGradient id="sp-moonGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%"   stop-color="#DCEAF4" stop-opacity="0.42"/>
-          <stop offset="55%"  stop-color="#A8C6DA" stop-opacity="0.10"/>
-          <stop offset="100%" stop-color="#A8C6DA" stop-opacity="0"/>
-        </radialGradient>
         <linearGradient id="sp-haze" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%"   stop-color="#5C86A6" stop-opacity="0"/>
           <stop offset="45%"  stop-color="#6E90AC" stop-opacity="0.26"/>
@@ -34,10 +29,6 @@
 
       <!-- Sky furniture: furthest away, so it barely moves -->
       <g class="sp-terrain__layer" data-sp-depth="0.05">
-        <!-- Upper left, below the wordmark. It used to sit top right,
-             where the glow ran under "Reach out" in the header. -->
-        <circle cx="210" cy="470" r="104" fill="url(#sp-moonGlow)"/>
-        <circle cx="210" cy="470" r="17" fill="#EAF3F9" opacity="0.82"/>
         <g fill="#D7E8F5">
           <circle cx="132"  cy="68"  r="1.2" opacity="0.6"/>
           <circle cx="318"  cy="40"  r="0.9" opacity="0.4"/>
@@ -104,6 +95,10 @@
               fill="#05101A"/>
       </g>
     </svg>
+
+    <!-- The moon is deliberately not inside the SVG above. See the note on
+         .sp-terrain__moon in terrain.css. -->
+    <div class="sp-terrain__moon" data-sp-depth="0.05"></div>
   </div>
 
   <div class="sp-terrain__inner sp-shell">
