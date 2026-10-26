@@ -249,3 +249,54 @@
 }
 .sp-outbound a:hover { border-bottom-color: var(--sp-c-beacon); }
 .sp-outbound span { display: block; font-size: var(--sp-text-sm); color: var(--sp-c-muted); }
+
+/* ==========================================================================
+   Figures and photo slots
+   --------------------------------------------------------------------------
+   One pattern for both states. A slot is a labelled, obviously-empty frame
+   that says what photograph belongs there; swapping in an <img> turns it
+   into a real figure without touching anything else.
+   ========================================================================== */
+
+.sp-figure {
+  margin: var(--sp-space-6) 0;
+}
+
+.sp-figure img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--sp-c-line);
+}
+
+.sp-figure figcaption {
+  margin-top: var(--sp-space-3);
+  font-family: var(--sp-font-mono);
+  font-size: var(--sp-text-2xs);
+  letter-spacing: var(--sp-tracking-wide);
+  text-transform: uppercase;
+  color: var(--sp-c-faint);
+}
+
+/* The empty state. Dashed, like .sp-todo, so an unfilled slot reads as a
+   note to self rather than as a broken image. */
+.sp-figure__slot {
+  display: grid;
+  place-items: center;
+  gap: var(--sp-space-2);
+  aspect-ratio: 16 / 9;
+  padding: var(--sp-space-5);
+  text-align: center;
+  border: 1px dashed var(--sp-c-lamp);
+  background: rgba(255, 196, 107, 0.05);
+  color: var(--sp-c-lamp);
+}
+
+.sp-figure__slot span { color: var(--sp-c-muted); }
+
+/* Two or three slots side by side without each one becoming a banner. */
+.sp-figure--row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--sp-space-4);
+}
+.sp-figure--row .sp-figure__slot { aspect-ratio: 4 / 3; }
