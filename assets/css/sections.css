@@ -292,17 +292,22 @@
   padding-block: var(--sp-space-8);
 }
 
+/* Flex rather than grid, specifically so the short last row centres.
+   Seven items wrap as 4 + 3, and a grid would pin that trailing three to
+   the left with a gap where the fourth would be. justify-content does the
+   job here, and the basis keeps four to a row while there is space. */
 .sp-index__grid {
-  display: grid;
-  /* 14rem, not 13: at 13 a wide screen fits five columns, which left the
-     seventh path stranded in a row of two beside three empty cells. Four
-     columns wrap seven items as 4 + 3, which reads as a block. */
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: var(--sp-space-4);
 }
 
 .sp-index__item {
   display: block;
+  flex: 0 1 calc((100% - 3 * var(--sp-space-4)) / 4);
+  min-width: 13rem;
+  overflow: hidden;
   padding: var(--sp-space-5);
   background: rgba(11, 19, 32, 0.8);
   border: 1px solid var(--sp-c-line);
@@ -312,6 +317,12 @@
               border-color var(--sp-dur) var(--sp-ease),
               background-color var(--sp-dur) var(--sp-ease);
 }
+/* One per row on a phone, filling the column. Without this the 13rem floor
+   leaves the card narrower than the shell with dead space either side. */
+@media (max-width: 599px) {
+  .sp-index__item { flex: 1 1 100%; min-width: 0; }
+}
+
 .sp-index__item[data-sp-kind="lamp"] { border-top-color: var(--sp-c-lamp); }
 .sp-index__item:hover {
   transform: translateY(-3px);
@@ -325,6 +336,23 @@
   color: var(--sp-c-beacon);
   margin-bottom: var(--sp-space-3);
 }
+/* Bleeds to the card edges out of the item's own padding, so no extra
+   wrapper element is needed.
+
+   The selector is img.sp-index__media, with the element, on purpose.
+   global.css carries `.sp-page img { max-width: 100% }` at specificity
+   0,1,1, which beats a bare class and clamps the negative-margin bleed
+   back to the content box, leaving a gap down the right edge. */
+img.sp-index__media {
+  display: block;
+  width: calc(100% + 2 * var(--sp-space-5));
+  max-width: none;
+  margin: calc(var(--sp-space-5) * -1) calc(var(--sp-space-5) * -1) var(--sp-space-5);
+  aspect-ratio: 16 / 9;
+  height: auto;
+  object-fit: cover;
+}
+
 .sp-index__item[data-sp-kind="lamp"] .sp-index__kicker { color: var(--sp-c-lamp); }
 
 .sp-index__title {
