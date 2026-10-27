@@ -111,8 +111,16 @@
 .sp-page *::before,
 .sp-page *::after { box-sizing: border-box; }
 
+/* height: auto is load-bearing, not tidiness. Our <img> tags carry width and
+   height attributes so the browser can reserve the right space before the
+   file arrives. Those attributes are presentational hints with the weight of
+   a real height, so max-width alone shrinks the width and leaves the height
+   at its attribute value, stretching the picture into a tall smear. That is
+   exactly what a visitor holding a cached copy of an older stylesheet saw on
+   the homepage index. This line makes that failure impossible everywhere,
+   whichever per-image rule happens to be missing. */
 .sp-page img,
-.sp-page svg { display: block; max-width: 100%; }
+.sp-page svg { display: block; max-width: 100%; height: auto; }
 
 .sp-page a { color: inherit; }
 
