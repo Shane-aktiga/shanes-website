@@ -29,6 +29,40 @@
 
 .sp-hero__inner { position: relative; z-index: 1; }
 
+/* Each page carries its card's photograph into the hero, so arriving somewhere
+   shows the same picture that sent you there. Scoped with :has(), so heroes
+   without a picture, the posts and the 404, are untouched. Without :has()
+   support the image simply sits below the standfirst, which is fine. */
+.sp-hero__inner:has(.sp-hero__media) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--sp-space-6);
+  align-items: center;
+}
+
+.sp-hero__media {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--sp-c-line);
+}
+
+/* Beside the title from 900px up, which is the same breakpoint the landscape
+   uses to switch out of map mode. Below it, stacked under the standfirst. */
+/* The text is wrapped in .sp-hero__text so the grid has exactly two
+   children. The obvious alternative, leaving the kicker, title and
+   standfirst loose and spanning the image with grid-row: 1 / -1, does not
+   work: -1 refers to the last line of the *explicit* grid, and these rows
+   are all implicit, so the image collapses to row 1 and sits level with
+   the kicker instead of centring beside the title. */
+@media (min-width: 900px) {
+  .sp-hero__inner:has(.sp-hero__media) {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    column-gap: var(--sp-space-8);
+  }
+}
+
 .sp-hero__kicker {
   color: var(--sp-c-lamp);
   margin: 0 0 var(--sp-space-4);
