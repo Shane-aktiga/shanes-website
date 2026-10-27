@@ -25,6 +25,7 @@ No dependencies. Python 3.8+.
 """
 
 import datetime
+import hashlib
 import pathlib
 import re
 import sys
@@ -93,6 +94,52 @@ def fill(text, values, page_name):
     return out
 
 
+ASSET_REF = re.compile(
+    r'(href|src)="(/assets/[^"?#]+\.'
+    r'(?:css|js|svg|png|jpe?g|webp|gif|ico|woff2?))"')
+_VERSIONS = {}
+
+
+def asset_version(rel):
+    """Short content hash for one of our own asset files."""
+    if rel not in _VERSIONS:
+        path = ROOT / rel.lstrip("/")
+        if path.is_file():
+            _VERSIONS[rel] = hashlib.sha256(path.read_bytes()).hexdigest()[:8]
+        else:
+            print("  warning: referenced asset not found: %s" % rel, file=sys.stderr)
+            _VERSIONS[rel] = None
+    return _VERSIONS[rel]
+
+
+def stamp_assets(text):
+    """Append ?v=<content hash> to our own stylesheets, scripts and images.
+
+    GitHub Pages tells browsers to cache assets, and it has no idea when we
+    change one. A returning visitor can therefore hold yesterday's CSS
+    against today's HTML, which is not merely stale, it is broken: markup
+    that expects a rule the cached file does not contain. Keying the URL to
+    the file's contents makes a changed file a different URL, so it is
+    fetched, while an unchanged file keeps its URL and stays cached. Images
+    are included because we have replaced photographs in place, under the
+    same filename, and a cached copy means the old picture quietly stays up.
+
+    The hash changes only when the bytes change, so a rebuild that alters
+    nothing produces an identical page. Only our own /assets/ files are
+    touched. Fonts, analytics and anything else off-site are left exactly
+    as written.
+    """
+
+    def swap(match):
+        attr, rel = match.group(1), match.group(2)
+        version = asset_version(rel)
+        if version is None:
+            return match.group(0)
+        return '%s="%s?v=%s"' % (attr, rel, version)
+
+    return ASSET_REF.sub(swap, text)
+
+
 def build_one(template):
     raw = template.read_text(encoding="utf-8")
     values, raw = read_vars(raw)
@@ -102,6 +149,7 @@ def build_one(template):
 
     html = expand_includes(raw)
     html = fill(html, merged, template.name)
+    html = stamp_assets(html)
 
     out_rel = merged.get("out", template.name)
     out_path = ROOT / out_rel
