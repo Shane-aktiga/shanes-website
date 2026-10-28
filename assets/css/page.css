@@ -334,3 +334,119 @@
   gap: var(--sp-space-4);
 }
 .sp-figure--row .sp-figure__slot { aspect-ratio: 4 / 3; }
+
+/* ==========================================================================
+   Buttons
+   --------------------------------------------------------------------------
+   The selector is a.sp-button, with the element, deliberately. Two rules
+   already in the cascade sit at 0,1,1 and would otherwise repaint a button
+   as body text: `.sp-page a { color: inherit }` in global.css, and
+   `.sp-outbound a { ... }` just above, which also hangs an underline off it.
+   A bare .sp-button class at 0,1,0 loses to both. This is the same trap that
+   caught the card link on the landscape and the index thumbnails.
+   ========================================================================== */
+
+a.sp-button,
+.sp-outbound a.sp-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-space-3);
+  justify-self: start;
+  min-height: 3rem;
+  padding: var(--sp-space-3) var(--sp-space-6);
+  font-family: var(--sp-font-mono);
+  font-size: var(--sp-text-xs);
+  letter-spacing: var(--sp-tracking-wide);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--sp-c-deep);
+  background: var(--sp-c-beacon);
+  border: 1px solid var(--sp-c-beacon);
+  border-radius: var(--sp-radius);
+  transition: background var(--sp-dur-fast) var(--sp-ease),
+              color var(--sp-dur-fast) var(--sp-ease);
+}
+
+a.sp-button:hover,
+a.sp-button:focus-visible,
+.sp-outbound a.sp-button:hover,
+.sp-outbound a.sp-button:focus-visible {
+  background: transparent;
+  color: var(--sp-c-beacon);
+  border-color: var(--sp-c-beacon);
+}
+
+/* ==========================================================================
+   Logo lockup
+   --------------------------------------------------------------------------
+   A brand mark marking the start of a section, not a photograph. Contained
+   rather than cropped, on a panel, so a square mark and a wide wordmark both
+   sit comfortably at the same scale.
+   ========================================================================== */
+
+.sp-logomark {
+  display: grid;
+  place-items: center;
+  margin: var(--sp-space-6) 0;
+  padding: var(--sp-space-6);
+  border: 1px solid var(--sp-c-line);
+  background: rgba(11, 19, 32, 0.55);
+}
+
+.sp-logomark img {
+  width: auto;
+  max-width: min(100%, 16rem);
+  max-height: 6rem;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Unfilled, the lockup borrows the dashed slot so it reads as a note to
+   self rather than a broken image. Wider and shorter than a photo slot,
+   because that is the shape a logo wants. */
+.sp-logomark .sp-figure__slot {
+  width: 100%;
+  aspect-ratio: 4 / 1;
+}
+
+/* ==========================================================================
+   Journal thumbnails
+   --------------------------------------------------------------------------
+   Card art for the two places post links appear: the recent block on the
+   homepage and the onward block at the foot of every page. Same idea as the
+   index list, so a post looks the same wherever you meet it.
+
+   Two fits, because the library is half photographs and half logos. A
+   photograph fills the frame. A logo must not be cropped, so --mark contains
+   it and gives it room; a 16/9 crop of a square mark would behead it.
+
+   The selectors carry the element for the reason given under Buttons above:
+   `.sp-page img { max-width: 100% }` sits at 0,1,1 and would clamp the
+   bleed on the onward cards back to the content box.
+   ========================================================================== */
+
+img.sp-journal__media,
+img.sp-onward__media {
+  display: block;
+  width: 100%;
+  max-width: none;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  object-fit: cover;
+  background: #0A1322;
+}
+
+/* The onward card has padding, so its image bleeds to the card edges and
+   sits flush under the coloured top border. */
+img.sp-onward__media {
+  width: calc(100% + 2 * var(--sp-space-5));
+  margin: calc(var(--sp-space-5) * -1) calc(var(--sp-space-5) * -1) var(--sp-space-5);
+}
+
+img.sp-journal__media--mark,
+img.sp-onward__media--mark {
+  object-fit: contain;
+  padding: var(--sp-space-5);
+  background: rgba(255, 255, 255, 0.04);
+}
