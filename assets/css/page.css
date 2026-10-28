@@ -394,12 +394,19 @@ a.sp-button:focus-visible,
   background: rgba(11, 19, 32, 0.55);
 }
 
+/* Both caps matter. A wide wordmark is held by max-width and a square mark
+   by max-height, so either shape lands at a similar visual weight rather
+   than one of them turning into a postage stamp beside the other. */
 .sp-logomark img {
   width: auto;
-  max-width: min(100%, 16rem);
-  max-height: 6rem;
+  max-width: min(100%, 26rem);
+  max-height: 5rem;
   height: auto;
   object-fit: contain;
+  /* `.sp-prose img` hangs a 1px border on every image in the article, which
+     frames a photograph nicely and draws a box around a transparent logo.
+     Same specificity as this rule, so it has to be turned off by name. */
+  border: 0;
 }
 
 /* Unfilled, the lockup borrows the dashed slot so it reads as a note to
