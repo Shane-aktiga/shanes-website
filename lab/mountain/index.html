@@ -14,10 +14,10 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@200;300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/global.css?v=2aa22b84">
   <link rel="stylesheet" href="/assets/css/sections.css?v=de13f183">
-  <link rel="stylesheet" href="/assets/css/mountain.css?v=489b47b7">
+  <link rel="stylesheet" href="/assets/css/mountain.css?v=59c1d020">
   <!-- Deferred, in order: they download while the loading screen is already on screen. -->
   <script src="/assets/js/vendor/three.r128.min.js?v=9274bbce" defer></script>
-  <script src="/assets/js/mountain.js?v=a91308e8" defer></script>
+  <script src="/assets/js/mountain.js?v=22d5db1c" defer></script>
   <script src="/assets/js/nav.js?v=efabe621" defer></script>
   <noscript><style>.loader, .ui, .labels, .cards, #gl { display: none !important; } .fallback { display: flex !important; }</style></noscript>
 </head>
@@ -129,9 +129,10 @@
       <h1 class="title">Welcome! Feel free to have a look around.</h1>
     </div>
     <div class="foot">
-      <p class="hint" id="hint"><span class="hint--fine">Drag to look around. Scroll to keep exploring.</span><span class="hint--coarse">Swipe to look around. Pinch to zoom. Scroll to keep exploring.</span></p>
+      <p class="hint" id="hint"><span class="hint--fine">Drag to look around or use + and &minus; to zoom.</span><span class="hint--coarse">Drag to look around or pinch to zoom.</span></p>
       <button class="reset" id="reset" type="button">Reset view</button>
     </div>
+    <button class="cue" id="cue" type="button" aria-label="Scroll down to keep exploring"><span aria-hidden="true">Scroll</span><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M5 9l7 7 7-7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <div class="zoom" role="group" aria-label="Zoom">
       <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
       <button type="button" id="zoom-out" aria-label="Zoom out">&minus;</button>

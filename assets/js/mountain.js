@@ -512,6 +512,11 @@
     if (nptr > 0 || !(e.scale > 0)) return;
     takeControl(); tgt.dist = gBase / e.scale; clampTargets();
   });
+  // the chevron: scroll on down past the scene to the page's first section
+  document.getElementById('cue').addEventListener('click', function () {
+    var top = railEl.getBoundingClientRect().bottom + window.scrollY;
+    window.scrollTo({ top: top, behavior: reduced.matches ? 'auto' : 'smooth' });
+  });
   function zoomBy(f) { takeControl(); tgt.dist *= f; clampTargets(); }
   document.getElementById('zoom-in').addEventListener('click', function () { zoomBy(1 / 1.22); });
   document.getElementById('zoom-out').addEventListener('click', function () { zoomBy(1.22); });
@@ -586,6 +591,7 @@
     if (current >= 0 && Math.abs(rp - lastRp) > 0.004) closeCard();   // scrolling on closes an open card
     lastRp = rp;
     hintEl.classList.toggle('is-away', rp > 0.03);
+    stage.classList.toggle('is-scrolled', rp > 0.03 || window.scrollY > 40);
     introEl.style.opacity = (1 - clamp(rp * 2.6, 0, 1)).toFixed(3);
     stage.style.setProperty('--fade', rp.toFixed(3));   // melts the scene's bottom edge into the page as it scrolls away
 

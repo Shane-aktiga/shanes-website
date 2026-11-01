@@ -255,6 +255,12 @@ Drive and Build placeholders now filled).
   an intercepted wheel, so scrollbar, keyboard and back-up all behave. With
   reduced motion the rail is off and the page just scrolls. Opening a card and
   then scrolling closes the card.
+- The on-screen hint is one sentence per device: "Drag to look around or pinch
+  to zoom." on touch screens and "Drag to look around or use + and - to zoom."
+  with a mouse. A small "Scroll" cue with a chevron sits in the bottom-left
+  corner (it fades once scrolling starts, and clicking it scrolls past the
+  scene). The hint is hidden on windows shorter than 700px, where it would
+  run into the paths.
 - Pointer listeners moved from the canvas to the whole stage, so a finger that
   lands on a label can still drag or pinch.
 - The site header is on the page. On screens under 900px wide the headline sits

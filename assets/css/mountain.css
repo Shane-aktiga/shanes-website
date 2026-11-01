@@ -121,6 +121,23 @@
     transition: opacity 600ms var(--ease);
   }
   .hint.is-gone, .hint.is-away { opacity: 0; }
+  /* a small "scroll" cue in the bottom-left corner: the scene is pinned, so nothing else says the page keeps going */
+  .cue {
+    position: absolute; left: max(16px, env(safe-area-inset-left, 0px)); bottom: max(0.7rem, env(safe-area-inset-bottom, 0px));
+    height: 2.5rem; display: flex; align-items: center; gap: 0.35rem; padding: 0 0.5rem 0 0;
+    font-family: var(--mono); font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); background: none; border: 0; cursor: pointer; pointer-events: auto;
+    text-shadow: 0 1px 8px rgba(5, 11, 24, 0.9);
+    transition: opacity 400ms var(--ease), color 160ms var(--ease);
+  }
+  .cue svg { animation: cueBob 2.4s ease-in-out infinite; filter: drop-shadow(0 1px 6px rgba(5, 11, 24, 0.9)); }
+  .cue:hover { color: var(--bright); }
+  .cue:focus-visible { outline: 2px solid var(--beacon); outline-offset: 2px; border-radius: 4px; }
+  .stage.is-scrolled .cue { opacity: 0; pointer-events: none; }
+  @keyframes cueBob { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
+  /* the hint sits above the zoom buttons' column and gives way on short windows, where it would run into the paths */
+  .hint { max-width: calc(100% - 11rem); text-align: center; }
+  @media (max-height: 699px) { .hint { display: none; } }
   .hint--coarse { display: none; }
   @media (pointer: coarse) { .hint--fine { display: none; } .hint--coarse { display: inline; } }
   .intro { transition: opacity 200ms linear; }
@@ -366,6 +383,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .rail { height: 100vh; height: 100svh; }   /* no pinned glide: the page just scrolls */
+    .cue svg { animation: none; }
     .card, .backdrop, .reset, .hint, .wp__note { transition: none; }
   }
   a.tag { pointer-events: auto; text-decoration: none; }
