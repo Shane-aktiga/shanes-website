@@ -563,7 +563,7 @@
     var span = railEl.offsetHeight - stage.offsetHeight;
     return span > 0 ? clamp(-railEl.getBoundingClientRect().top / span, 0, 1) : 0;
   }
-  var RAIL = { dist: 0.36, drop: 5, forward: 30, lower: 3 };
+  var RAIL = { dist: 0.12, drop: 2, forward: 8, lower: 1 };
 
   function frame(now) {
     raf = requestAnimationFrame(frame);

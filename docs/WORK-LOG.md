@@ -247,7 +247,7 @@ Drive and Build placeholders now filled).
   view, a pinch zooms the scene (trackpad pinch on desktop), and desktop gets
   small + and - buttons. `touch-action` on the canvas went from `none` to
   `pan-y`, and is also set on the stage so a pinch can never zoom the whole page.
-- **Scroll rail.** The scene sits in a tall box (`#rail`, 190svh) and is pinned
+- **Scroll rail.** The scene sits in a tall box (`#rail`, 150svh) and is pinned
   (`position: sticky`) while the visitor scrolls through it. Scroll progress
   glides the camera forward and lower, fades the headline, and melts the scene's
   bottom edge into the page. Then the real homepage sections follow (intro,
@@ -255,6 +255,10 @@ Drive and Build placeholders now filled).
   an intercepted wheel, so scrollbar, keyboard and back-up all behave. With
   reduced motion the rail is off and the page just scrolls. Opening a card and
   then scrolling closes the card.
+- Gentler glide, after a phone test: the camera now moves about a third as far
+  (12% closer instead of 36%) and the rail is half as long, so all seven paths
+  stay on screen the whole way and the page moves on after about half a screen
+  of scrolling.
 - The on-screen hint is one sentence per device: "Drag to look around or pinch
   to zoom." on touch screens and "Drag to look around or use + and - to zoom."
   with a mouse. A small "Scroll" cue with a chevron sits in the bottom-left
