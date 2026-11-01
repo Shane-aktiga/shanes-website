@@ -6,6 +6,10 @@ that stitches components into pages.
 
 Live on GitHub Pages at the apex domain.
 
+**Starting a new session? Read `docs/PROJECT-SUMMARY.md` first.** It holds the
+current state, the working agreement and the open items. `docs/WORK-LOG.md` is
+the dated history of what changed and why.
+
 ---
 
 ## Quick start
@@ -25,23 +29,27 @@ rebuilding changes nothing on the live site.
 
 ---
 
-## The six paths
+## The seven paths
 
 The spine of the site. Named, numbered and ordered the same way everywhere:
-the landscape, the menu, the index, the footer.
+the landscape, the menu, the index, the footer. Journal is always last.
 
-| # | Name | URL | Template | Card image |
+| # | Name | URL | Template | Card and hero image |
 |---|---|---|---|---|
-| 01 | Work | `/work/` | `templates/work.html` | `wp-desk.jpg` |
-| 02 | Fly | `/fly/` | `templates/fly.html` | `wp-launch.jpg` |
-| 03 | Play | `/play/` | `templates/play.html` | `wp-studio.jpg` |
-| 04 | Drive | `/drive/` | `templates/drive.html` | `wp-rig.svg` *(placeholder)* |
-| 05 | Build | `/build/` | `templates/build.html` | `wp-shop.svg` *(placeholder)* |
-| 06 | Journal | `/journal/` | `templates/journal.html` | `wp-notebook.jpg` |
+| 01 | Work | `/work/` | `templates/work.html` | `work-card.jpg` |
+| 02 | Fly | `/fly/` | `templates/fly.html` | `fly-card.jpg` |
+| 03 | Play | `/play/` | `templates/play.html` | `play-card.jpg` |
+| 04 | Drive | `/drive/` | `templates/drive.html` | `drive-card.jpg` |
+| 05 | Build | `/build/` | `templates/build.html` | `build-card.jpg` |
+| 06 | Grow | `/optimism/` | `templates/optimism.html` | `grow-card.jpg` |
+| 07 | Journal | `/journal/` | `templates/journal.html` | `wp-notebook.jpg` |
 
-The image filenames still carry the paths' original names (desk, launch,
-studio, rig, shop, notebook). Renaming them is churn with no payoff, so they
-were left alone. The mapping above is the reference.
+**Grow keeps the URL `/optimism/`.** Only the label changed, on purpose.
+
+Each card image is 960 by 540 and is used three times: on the landscape card,
+in the homepage index, and in the hero of that path's own page, so a visitor
+sees the same picture on the way in as on arrival. `wp-notebook.jpg` keeps its
+old name; the others were renamed to match their path.
 
 **Desktop waypoint positions are keyed by name, not by order.** Each light's
 coordinates live in `terrain.css` against `[data-sp-waypoint="work"]` and so
@@ -60,6 +68,9 @@ the footer, and leaves the desktop constellation exactly where it is.
 ├── robots.txt                  generated on every build
 ├── CNAME                       custom domain
 ├── README.md                   this file
+├── docs/
+│   ├── PROJECT-SUMMARY.md      current state, working agreement, open items
+│   └── WORK-LOG.md             dated history of every change
 │
 ├── templates/                  one file per page, with @var and @include
 │   ├── home.html               → /
@@ -68,8 +79,8 @@ the footer, and leaves the desktop constellation exactly where it is.
 │   ├── play.html               → /play/
 │   ├── drive.html              → /drive/
 │   ├── build.html              → /build/
-│   ├── journal.html            → /journal/      the writing archive
-│   ├── optimism.html           → /optimism/
+│   ├── journal.html            → /journal/      the journal archive
+│   ├── optimism.html           → /optimism/     labelled Grow
 │   ├── 404.html                → /404.html
 │   ├── home-legacy.html        → /home/         redirect to /
 │   └── posts/                  → one folder per post, original slugs (8)
@@ -143,7 +154,9 @@ deliberately left out of the sitemap, since it is a `noindex` redirect.
 1. Copy any file in `templates/posts/`.
 2. Set the slug in `out` and `path`, set `og_type: article`.
 3. Add a row to the archive in `templates/journal.html` and, if it should
-   appear on the homepage, to `components/notebook-preview.html`.
+   appear on the homepage, a card to `components/notebook-preview.html` with a
+   thumbnail. The post-to-image mapping is in `docs/PROJECT-SUMMARY.md`. A
+   logo mark takes the `--mark` modifier so it is contained, not cropped.
 4. Build.
 
 When there are enough posts for that to feel repetitive, move the post list
@@ -155,16 +168,18 @@ preview from it. The structure is already shaped for that.
 Six places need to agree: `components/terrain.html` (waypoint, card, keys),
 `components/header.html` (menu), `components/index-nav.html`,
 `components/footer.html`, the template's own `@var` block, and the
-`[data-sp-waypoint="..."]` position rules in `assets/css/terrain.css`.
-Then rebuild and delete the old output folder.
+`[data-sp-waypoint="..."]` position rules in `assets/css/terrain.css`. The
+card image is also used by the index item and the page hero, and each
+`sp-onward` block at the foot of the other pages may link to it. Then rebuild
+and delete the old output folder.
 
 ---
 
 ## Navigation
 
 One burger menu at every screen size, not just on phones. The panel carries
-all six paths plus Home, Optimism, the writing archive and the contact
-address, so every page can reach every other page without a back button.
+all seven paths plus Home, a link down to the footer and the contact address,
+so every page can reach every other page without a back button.
 
 The header is `position: fixed` and gains a solid background after 80px of
 scroll, so navigation stays reachable from the bottom of a long post.
@@ -178,7 +193,9 @@ with ordinary links in it.
 
 ## The waypoint cards
 
-Click a light, get a card. On desktop the card is absolutely positioned near
+Click a light, get a card. Cards open on click only, never on hover; hover
+gives an animated reaction and nothing else, and hover rules sit inside
+`@media (hover: hover)` so touch devices cannot latch into them. On desktop the card is absolutely positioned near
 its waypoint, with a three-way fallback (above, else below, else beside) so a
 tall card never lands on top of the button that opened it, and a clamp that
 keeps it clear of the fixed header.
@@ -268,10 +285,10 @@ people's copyrighted work. None of them are used on this site, and
 Everything comes from the tokens at the top of `assets/css/global.css`.
 Components never hard-code a hex value.
 
-- **Colour.** Night through ridge blues to a dawn horizon, plus two light
-  colours: warm `--sp-c-lamp` marks where things get made, cool
+- **Color.** Night through ridge blues to a dawn horizon, plus two light
+  colors: warm `--sp-c-lamp` marks where things get made, cool
   `--sp-c-beacon` marks where he goes. Keep that rule. A visitor reads it
-  before they read a label. The card buttons inherit the same two colours.
+  before they read a label. The card buttons inherit the same two colors.
 - **Type.** Sora for everything visible, IBM Plex Mono for every small
   letterspaced label. Nothing in between.
 - **The climb.** The page lightens as you descend, from near-black at the
@@ -294,7 +311,7 @@ Every class is namespaced `sp-`.
   phrase, so a screen reader still announces "Go to Build".
 - The landscape SVG is `aria-hidden`. It carries no information.
 - **The site works with JavaScript off.** The Explore Index below the
-  landscape is the same six destinations as ordinary links, and every page is
+  landscape is the same seven destinations as ordinary links, and every page is
   plain HTML.
 - `prefers-reduced-motion` switches off parallax, the cloud drift, the
   waypoint pulse and the card transition. Everything stays usable.
@@ -304,7 +321,14 @@ Every class is namespaced `sp-`.
 
 ## Performance
 
-- No images above the fold. The landscape is inline SVG.
+- The homepage has no images above the fold; the landscape is inline SVG.
+  Interior pages open with the card image in the hero. Those are currently
+  `loading="lazy"`, which is worth removing (see Still to do).
+- **Cache busting is automatic.** `build.py` appends `?v=<content hash>` to
+  every `/assets/` CSS, JS and image reference in the generated HTML, so a
+  changed file is a new URL and a returning visitor cannot be left holding
+  yesterday's stylesheet against today's markup. An unchanged file keeps its
+  URL and stays cached. Do not write `?v=` by hand.
 - Two scripts, both deferred, no jQuery and no animation library. Only
   `nav.js` (3 KB) is on every page. `terrain.js` (16 KB) is loaded by the
   home template alone, because that is the only page with a landscape on it,
@@ -317,20 +341,21 @@ Every class is namespaced `sp-`.
 
 ## Still to do
 
+The full list, with context, is under "Open items" in
+`docs/PROJECT-SUMMARY.md`. In short:
+
+- **Two labelled photo placeholders:** a Thursday league race screenshot on
+  `/drive/` and a track or live clip on `/play/`.
+- **Hero images are lazy but above the fold.** Remove `loading="lazy"` from the
+  seven `.sp-hero__media` images.
 - **Add a `.nojekyll` file at the repo root.** Without it GitHub Pages runs
   everything through Jekyll, which silently skips any file or folder starting
   with an underscore. Nothing here starts with one today, so the site builds
   correctly, but it is one `touch .nojekyll` away from never being a problem.
-- **Real photographs for Drive and Build.** Both still use abstract SVG
-  placeholders, because there is no sim rig photo and no carpentry photo in
-  the media library. To fill either: drop a 16:9 image into `assets/img/` as
-  `wp-rig.jpg` or `wp-shop.jpg`, then change the one `src` and the `alt` in
-  `components/terrain.html`. Both lines are marked with an HTML comment.
 - **Self-host the fonts.** Two families from Google Fonts are two extra
   connections and a flash of unstyled text. Download the woff2 files into
   `assets/fonts/`, swap the `<link>` in `components/head.html` for
   `@font-face` rules, and the site has no third-party requests except
   analytics.
-- `/drive/` is deliberately thin. Worth filling in when you feel like it.
-- `/optimism/` mentions therapeutic support in passing, carried over from the
-  old site. Worth a read-through to check it still says what you want.
+- **Thumbnails on the `/journal/` archive**, if wanted. It is still a plain
+  date, title and tag list.
