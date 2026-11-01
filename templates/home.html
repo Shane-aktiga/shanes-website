@@ -6,6 +6,12 @@
 <html lang="en">
 <head>
 <!-- @include components/head.html -->
+
+<!-- The 3D landscape hero. Scripts are deferred, so they download while the loading screen is already showing. -->
+<link rel="stylesheet" href="/assets/css/mountain.css">
+<script src="/assets/js/vendor/three.r128.min.js" defer></script>
+<script src="/assets/js/mountain.js" defer></script>
+<noscript><style>.loader, .ui, .labels, .cards, #gl { display: none !important; } .fallback { display: flex !important; } .rail { height: 100vh !important; }</style></noscript>
 </head>
 
 <body class="{{body_class}}">
@@ -15,7 +21,7 @@
 <!-- @include components/header.html -->
 
 <main id="sp-main">
-<!-- @include components/terrain.html -->
+<!-- @include components/mountain.html -->
 
 <!-- @include components/intro.html -->
 
@@ -26,6 +32,5 @@
 
 <!-- @include components/footer.html -->
 
-<script src="/assets/js/terrain.js" defer></script>
 </body>
 </html>

@@ -1,38 +1,10 @@
-<!-- @var out: lab/mountain/index.html -->
-<!-- @var path: /lab/mountain/ -->
-<!-- @var title: Mountain Explorer (prototype) - Shane Parreco -->
-<!-- @var description: A 3D Blue Ridge landscape prototype for shaneparreco.com. Seven paths, one view. -->
-<!-- @var noindex: true -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>{{title}}</title>
-  <meta name="description" content="{{description}}">
-  <meta name="robots" content="noindex, follow">
-  <meta name="theme-color" content="#070A14">
-  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-  <link rel="alternate icon" href="/assets/img/favicon-32.png" sizes="32x32">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@200;300;400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/global.css">
-  <link rel="stylesheet" href="/assets/css/sections.css">
-  <link rel="stylesheet" href="/assets/css/mountain.css">
-  <!-- Deferred, in order: they download while the loading screen is already on screen. -->
-  <script src="/assets/js/vendor/three.r128.min.js" defer></script>
-  <script src="/assets/js/mountain.js" defer></script>
-  <script src="/assets/js/nav.js" defer></script>
-  <noscript><style>.loader, .ui, .labels, .cards, #gl { display: none !important; } .fallback { display: flex !important; }</style></noscript>
-</head>
-<body class="{{body_class}}">
+<!-- Component 2: The 3D landscape hero (the homepage's first screen).
+     Needs: assets/css/mountain.css, assets/js/vendor/three.r128.min.js, assets/js/mountain.js
+     The seven paths are listed below as plain HTML (#fallback). Crawlers, visitors without
+     JavaScript and visitors without WebGL get that list as is. The scene reads each path's
+     name, note, card copy, image and link from it, then hides it. To change what a light or
+     a card says, change it here. Positions and colors live in assets/js/mountain.js. -->
 
-<a class="sp-skip" href="#sp-main">Skip to content</a>
-
-<!-- @include components/header.html -->
-
-<main id="sp-main">
 <!-- The rail: the scene stays pinned while the visitor scrolls through this tall box,
      and the camera glides forward. When the box ends, the page scrolls on as usual. -->
 <div class="rail" id="rail">
@@ -126,14 +98,3 @@
   </nav>
 </div>
 </div>
-
-<!-- @include components/intro.html -->
-
-<!-- @include components/index-nav.html -->
-
-<!-- @include components/notebook-preview.html -->
-</main>
-
-<!-- @include components/footer.html -->
-</body>
-</html>

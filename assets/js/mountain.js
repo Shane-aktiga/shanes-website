@@ -1,4 +1,4 @@
-/* /lab/mountain/ : the 3D landscape prototype (three.js r128, loaded separately). */
+/* The 3D landscape hero on the homepage. Needs three.js r128 (assets/js/vendor) and the markup in components/mountain.html. */
 (function () {
   'use strict';
 

@@ -1,4 +1,4 @@
-/* /lab/mountain/ : the 3D landscape prototype. Self-contained; does not use global.css. */
+/* The 3D landscape hero on the homepage (three.js r128 is loaded separately). Scene, labels, cards, rail and the loading screen. Self-contained: it does not use global.css tokens. */
   /* Layout: one full-height stage. A WebGL canvas fills it, HTML labels are
      projected on top of the 3D spheres, and UI (intro, hint, reset) sits in a
      padded overlay. Single dark look on purpose: it is a night scene. */
