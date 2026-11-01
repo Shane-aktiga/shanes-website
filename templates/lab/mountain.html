@@ -16,15 +16,27 @@
   <link rel="alternate icon" href="/assets/img/favicon-32.png" sizes="32x32">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@200;300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="stylesheet" href="/assets/css/sections.css">
   <link rel="stylesheet" href="/assets/css/mountain.css">
   <!-- Deferred, in order: they download while the loading screen is already on screen. -->
   <script src="/assets/js/vendor/three.r128.min.js" defer></script>
   <script src="/assets/js/mountain.js" defer></script>
+  <script src="/assets/js/nav.js" defer></script>
   <noscript><style>.loader, .ui, .labels, .cards, #gl { display: none !important; } .fallback { display: flex !important; }</style></noscript>
 </head>
-<body>
-<main class="stage" id="stage">
+<body class="{{body_class}}">
+
+<a class="sp-skip" href="#sp-main">Skip to content</a>
+
+<!-- @include components/header.html -->
+
+<main id="sp-main">
+<!-- The rail: the scene stays pinned while the visitor scrolls through this tall box,
+     and the camera glides forward. When the box ends, the page scrolls on as usual. -->
+<div class="rail" id="rail">
+<div class="stage" id="stage">
   <canvas id="gl" aria-hidden="true"></canvas>
 
   <div class="labels" id="labels">
@@ -36,14 +48,17 @@
   <div class="backdrop" id="backdrop"></div>
 
   <div class="ui">
-    <a class="tag" href="/">Prototype &middot; back to site</a>
     <div class="intro">
       <p class="eyebrow">Seven paths. All led to now. Pick one and explore.</p>
       <h1 class="title">Welcome! Feel free to have a look around.</h1>
     </div>
     <div class="foot">
-      <p class="hint" id="hint">Drag to look around. Scroll or pinch to zoom.</p>
+      <p class="hint" id="hint"><span class="hint--fine">Drag to look around. Scroll to keep exploring.</span><span class="hint--coarse">Swipe to look around. Pinch to zoom. Scroll to keep exploring.</span></p>
       <button class="reset" id="reset" type="button">Reset view</button>
+    </div>
+    <div class="zoom" role="group" aria-label="Zoom">
+      <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+      <button type="button" id="zoom-out" aria-label="Zoom out">&minus;</button>
     </div>
   </div>
 
@@ -108,6 +123,16 @@
       </li>
     </ul>
   </nav>
+</div>
+</div>
+
+<!-- @include components/intro.html -->
+
+<!-- @include components/index-nav.html -->
+
+<!-- @include components/notebook-preview.html -->
 </main>
+
+<!-- @include components/footer.html -->
 </body>
 </html>

@@ -187,8 +187,9 @@ are preinstalled; use `python3 -m http.server 8899` from the repo root).
 ## The lab page
 
 `/lab/mountain/` is a noindex prototype of a 3D landscape for the homepage. It
-is standalone (own CSS and JS, no header or footer), not linked from anywhere,
-and not in the sitemap. The homepage is unchanged. See the 1 November entry in
+has its own scene CSS and JS plus the real header, intro, index, journal block
+and footer below a pinned scroll rail. It is not linked from anywhere and not in
+the sitemap. The homepage is unchanged. See the 1 November entry in
 `WORK-LOG.md`. Its words come from a plain HTML list in the page, copied from
 `components/terrain.html`; if homepage card copy changes, update that list too.
 Append `?perf=1` for a load-timing readout.
@@ -197,7 +198,8 @@ Append `?perf=1` for a load-timing readout.
 
 0. **Decide what to do with the lab page** after testing load time and feel on
    the real site: promote it to the homepage, keep it as a lab page, or remove
-   it. Promoting needs vertical scroll left to the page (see the work log).
+   it. Scrolling past the scene already works (rail plus pan-y gestures); the
+   remaining work is swapping the real homepage hero for it and a real-phone check.
 
 1. **Two labelled photo placeholders.** `templates/drive.html` wants a
    Thursday league race screenshot. `templates/play.html` wants a track or

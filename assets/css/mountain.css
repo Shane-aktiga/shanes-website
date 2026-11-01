@@ -19,7 +19,6 @@
     --ease:     cubic-bezier(0.22, 0.61, 0.36, 1);
     color-scheme: dark;
   }
-  html, body { height: 100%; }
   body {
     margin: 0;
     background: var(--night);
@@ -28,13 +27,24 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* The rail is a tall box; the stage inside it stays pinned to the top of the screen while the
+     visitor scrolls through it. svh keeps the pinned height steady while phone toolbars slide away. */
+  .rail { position: relative; height: calc(100vh + 90vh); height: calc(100svh + 90svh); }
   .stage {
-    position: relative;
-    height: 100%;
-    min-height: 520px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
     overflow: hidden;
+    touch-action: pan-y;      /* a pinch anywhere on the scene zooms the scene, not the whole page */
     background: linear-gradient(180deg, #050B18 0%, #0A1C31 28%, #143550 50%, #1F4A68 72%, #2E5E7C 100%);
     isolation: isolate;
+  }
+  .stage::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; z-index: 2; pointer-events: none;
+    background: linear-gradient(to bottom, rgba(7, 10, 20, 0), var(--night));
+    opacity: var(--fade, 0);
   }
   #gl {
     position: absolute;
@@ -43,7 +53,7 @@
     height: 100%;
     display: block;
     cursor: grab;
-    touch-action: none;       /* pinch and drag belong to the scene */
+    touch-action: pan-y;      /* sideways drag and pinch belong to the scene; up and down scrolls the page */
     -webkit-tap-highlight-color: transparent;
   }
   #gl.is-dragging { cursor: grabbing; }
@@ -110,7 +120,24 @@
     text-shadow: 0 1px 8px rgba(5, 11, 24, 0.9);
     transition: opacity 600ms var(--ease);
   }
-  .hint.is-gone { opacity: 0; }
+  .hint.is-gone, .hint.is-away { opacity: 0; }
+  .hint--coarse { display: none; }
+  @media (pointer: coarse) { .hint--fine { display: none; } .hint--coarse { display: inline; } }
+  .intro { transition: opacity 200ms linear; }
+  /* on phones the eyebrow line is as wide as the screen, so it has to sit below the site header */
+  @media (max-width: 899px) { .intro { margin-top: calc(72px + clamp(0.25rem, 2vh, 1rem)); } }
+
+  /* + and - for people with a mouse; touch screens pinch, and trackpads pinch too */
+  .zoom { position: absolute; right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(1rem, env(safe-area-inset-bottom, 0px)); display: none; flex-direction: column; gap: 6px; pointer-events: none; }
+  @media (pointer: fine) { .zoom { display: flex; } }
+  .zoom button {
+    pointer-events: auto; width: 2.25rem; height: 2.25rem; display: grid; place-items: center; padding: 0;
+    font-family: var(--mono); font-size: 1.05rem; line-height: 1; color: var(--text);
+    background: rgba(8, 15, 28, 0.78); border: 1px solid var(--line); border-radius: 50%; cursor: pointer;
+    transition: border-color 160ms var(--ease), color 160ms var(--ease);
+  }
+  .zoom button:hover { border-color: var(--beacon); color: var(--bright); }
+  .zoom button:focus-visible { outline: 2px solid var(--beacon); outline-offset: 3px; }
   .reset {
     pointer-events: auto;
     font-family: var(--mono);
@@ -338,6 +365,7 @@
   .fallback a:focus-visible { outline: 2px solid var(--beacon); outline-offset: 3px; }
 
   @media (prefers-reduced-motion: reduce) {
+    .rail { height: 100vh; height: 100svh; }   /* no pinned glide: the page just scrolls */
     .card, .backdrop, .reset, .hint, .wp__note { transition: none; }
   }
   a.tag { pointer-events: auto; text-decoration: none; }

@@ -399,7 +399,7 @@
     DEF.el = 8 + 10 * tall;                          // a higher camera spreads the paths out vertically
     LIM.elMin = 3; LIM.elMax = portrait ? 32 : 26;
     // slide the picture down: on short windows to clear the headline, on tall ones to keep the sky
-    var drop = Math.max(Hh < 640 ? (640 - Hh) * 0.8 : 0, tall * 0.1 * Hh);
+    var drop = Math.max(Hh < 700 ? (700 - Hh) * 0.8 : 0, tall * 0.1 * Hh) + (W < 900 ? 36 : 0);   // on phones the headline sits lower, under the site header
     if (drop) camera.setViewOffset(W, Hh, 0, -drop, W, Hh); else camera.clearViewOffset();
     skyMat.uniforms.uDrop.value = 0.05 * tall;   // on tall screens the ridges sit lower, so the horizon glow follows them down
     camera.updateProjectionMatrix();
@@ -441,16 +441,20 @@
     var a = ptrs[ids[0]], b = ptrs[ids[1]];
     return Math.hypot(a.x - b.x, a.y - b.y);
   }
-  canvas.addEventListener('pointerdown', function (e) {
-    try { canvas.setPointerCapture(e.pointerId); } catch (x) {}
+  // Listening on the whole stage (not just the canvas) means a drag or a pinch still works when a finger
+  // lands on a label. Cards and buttons keep their own taps.
+  function onScene(e) { return !e.target.closest('.card, .zoom, .reset, .backdrop'); }
+  stage.addEventListener('pointerdown', function (e) {
+    if (!onScene(e)) return;
+    if (e.target === canvas) { try { canvas.setPointerCapture(e.pointerId); } catch (x) {} }
     ptrs[e.pointerId] = { x: e.clientX, y: e.clientY }; nptr++;
     if (nptr === 1) drag = { sx: e.clientX, sy: e.clientY, t: performance.now(), moved: false };
     else if (nptr === 2) { pinchD = pdist(); if (drag) drag.moved = true; takeControl(); }
   });
-  canvas.addEventListener('pointermove', function (e) {
+  stage.addEventListener('pointermove', function (e) {
     var p = ptrs[e.pointerId];
     if (!p) {
-      if (e.pointerType === 'mouse') { rayHover = pickAt(e.clientX, e.clientY); canvas.style.cursor = rayHover >= 0 ? 'pointer' : ''; }
+      if (e.pointerType === 'mouse' && e.target === canvas) { rayHover = pickAt(e.clientX, e.clientY); canvas.style.cursor = rayHover >= 0 ? 'pointer' : ''; }
       return;
     }
     var dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
@@ -459,11 +463,13 @@
       if (pinchD > 0 && nd > 0) { tgt.dist *= Math.pow(pinchD / nd, 1.9); pinchD = nd; clampTargets(); }
     } else if (drag) {
       if (!drag.moved && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 5) {
-        drag.moved = true; takeControl(); canvas.classList.add('is-dragging');
+        // a finger moving mostly up or down is scrolling the page, so the scene leaves it alone
+        if (e.pointerType === 'touch' && Math.abs(e.clientY - drag.sy) > Math.abs(e.clientX - drag.sx)) { drag.scroll = true; }
+        else { drag.moved = true; takeControl(); canvas.classList.add('is-dragging'); }
       }
       if (drag.moved) {
         tgt.az -= dx * 0.16;
-        tgt.el += dy * 0.1;
+        if (e.pointerType !== 'touch') tgt.el += dy * 0.1;   // on touch, up and down is for scrolling
         clampTargets();
       }
     }
@@ -473,24 +479,42 @@
     delete ptrs[e.pointerId]; nptr = Math.max(0, nptr - 1);
     canvas.classList.remove('is-dragging');
     if (nptr === 0 && drag) {
-      if (e.type === 'pointerup' && !drag.moved && performance.now() - drag.t < 600) {
+      if (e.type === 'pointerup' && !drag.moved && !drag.scroll && e.target === canvas && performance.now() - drag.t < 600) {
         var i = pickAt(e.clientX, e.clientY);
         if (i >= 0) { if (current === i) closeCard(); else openCard(i, false); } else closeCard();
       }
       drag = null;
     } else if (nptr === 1) { drag = { sx: 0, sy: 0, t: 0, moved: true }; pinchD = 0; }
   }
-  canvas.addEventListener('pointerup', endPtr);
-  canvas.addEventListener('pointercancel', endPtr);
+  stage.addEventListener('pointerup', endPtr);
+  stage.addEventListener('pointercancel', endPtr);
   canvas.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse' && !ptrs[e.pointerId]) { rayHover = -1; canvas.style.cursor = ''; } });
+  // The wheel belongs to the page: plain up and down scrolling moves down the site.
+  // Only two gestures are taken: a trackpad pinch (which browsers report as ctrl + wheel) zooms,
+  // and a mostly sideways swipe turns the view.
   canvas.addEventListener('wheel', function (e) {
-    e.preventDefault(); takeControl();
-    var dy = e.deltaY * (e.deltaMode === 1 ? 16 : (e.deltaMode === 2 ? 100 : 1));
-    dy = clamp(dy, -120, 120);
-    tgt.dist *= Math.exp(dy * (e.ctrlKey ? 0.011 : 0.0026));
-    tgt.az += clamp(e.deltaX, -60, 60) * 0.05;       // sideways swipe turns the view
-    clampTargets();
+    if (e.ctrlKey) {
+      e.preventDefault(); takeControl();
+      var dy = clamp(e.deltaY * (e.deltaMode === 1 ? 16 : 1), -120, 120);
+      tgt.dist *= Math.exp(dy * 0.011);
+      clampTargets();
+    } else if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.5) {
+      e.preventDefault(); takeControl();
+      tgt.az += clamp(e.deltaX, -60, 60) * 0.05;
+      clampTargets();
+    }
   }, { passive: false });
+  // Safari on a Mac reports a trackpad pinch as gesture events instead.
+  var gBase = 0;
+  canvas.addEventListener('gesturestart', function (e) { e.preventDefault(); gBase = tgt.dist; });
+  canvas.addEventListener('gesturechange', function (e) {
+    e.preventDefault();
+    if (nptr > 0 || !(e.scale > 0)) return;
+    takeControl(); tgt.dist = gBase / e.scale; clampTargets();
+  });
+  function zoomBy(f) { takeControl(); tgt.dist *= f; clampTargets(); }
+  document.getElementById('zoom-in').addEventListener('click', function () { zoomBy(1 / 1.22); });
+  document.getElementById('zoom-out').addEventListener('click', function () { zoomBy(1.22); });
   stage.addEventListener('keydown', function (e) {
     var k = e.key;
     if (k === 'ArrowLeft' || k === 'ArrowRight' || k === '+' || k === '=' || k === '-' || k === '_') {
@@ -525,6 +549,17 @@
   var tmp = new THREE.Vector3();
   var running = true, raf = 0, last = 0, T = 0, onScreen = true;
 
+  // ---- The rail: scrolling the page glides the camera forward -----------------
+  // The stage is pinned inside a tall box (#rail). How far through that box the page has scrolled
+  // (0 to 1) moves the camera along a short path: nearer, a little lower, deeper into the valley.
+  var railEl = document.getElementById('rail'), railCur = 0, railGoal = 0, lastRp = 0;
+  function readRail() {
+    if (reduced.matches || !railEl) return 0;
+    var span = railEl.offsetHeight - stage.offsetHeight;
+    return span > 0 ? clamp(-railEl.getBoundingClientRect().top / span, 0, 1) : 0;
+  }
+  var RAIL = { dist: 0.36, drop: 5, forward: 30, lower: 3 };
+
   function frame(now) {
     raf = requestAnimationFrame(frame);
     if (!running) return;
@@ -545,15 +580,25 @@
     cur.el += (tgt.el - cur.el) * k;
     cur.dist += (tgt.dist - cur.dist) * k;
 
-    var a = cur.az * D2R, el = cur.el * D2R;
+    railGoal = readRail();
+    railCur += (railGoal - railCur) * (reduced.matches ? 1 : 1 - Math.exp(-dt * 12));
+    var rp = railCur * railCur * (3 - 2 * railCur);          // eased, so the glide starts and ends gently
+    if (current >= 0 && Math.abs(rp - lastRp) > 0.004) closeCard();   // scrolling on closes an open card
+    lastRp = rp;
+    hintEl.classList.toggle('is-away', rp > 0.03);
+    introEl.style.opacity = (1 - clamp(rp * 2.6, 0, 1)).toFixed(3);
+    stage.style.setProperty('--fade', rp.toFixed(3));   // melts the scene's bottom edge into the page as it scrolls away
+
+    var a = cur.az * D2R, el = (cur.el - RAIL.drop * rp) * D2R, rd = cur.dist * (1 - RAIL.dist * rp);
+    var tx = TARGET.x, ty = TARGET.y - RAIL.lower * rp, tz = TARGET.z - RAIL.forward * rp;
     camera.position.set(
-      TARGET.x + cur.dist * Math.cos(el) * Math.sin(a),
-      TARGET.y + cur.dist * Math.sin(el),
-      TARGET.z + cur.dist * Math.cos(el) * Math.cos(a));
+      tx + rd * Math.cos(el) * Math.sin(a),
+      ty + rd * Math.sin(el),
+      tz + rd * Math.cos(el) * Math.cos(a));
     // never let the camera dip under the terrain
     var floorY = H(camera.position.x, camera.position.z) + 3.5;
     if (camera.position.y < floorY) camera.position.y = floorY;
-    camera.lookAt(TARGET);
+    camera.lookAt(tx, ty, tz);
     camera.updateMatrixWorld();
     sky.position.copy(camera.position); stars.position.copy(camera.position);
 
