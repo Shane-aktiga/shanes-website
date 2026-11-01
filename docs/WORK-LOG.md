@@ -201,6 +201,49 @@ Drive and Build placeholders now filled).
 
 ---
 
+## 1 November 2026: the 3D landscape prototype (lab page)
+
+**Lab page: `/lab/mountain/`, a noindex test page. The homepage is untouched.**
+- Shane wanted the flat mountain illustration to gain depth. It was
+  prototyped first outside the repo, over about eight rounds of feedback, then
+  ported here as a standalone page so load time and feel can be judged on the
+  real web before anything touches the homepage.
+- What it is: a Three.js landscape with a procedural Blue Ridge heightfield,
+  faint topo contour lines, a darker night sky with stars and the moon, and
+  seven glowing spheres (Work, Fly, Play, Drive, Build, Grow, Journal). Each has
+  a ground ring that ripples in time with the sphere's pulse, a thin stem, and a
+  camera-facing label that is a real button. Clicking opens the same card as the
+  homepage, with a button to the real page. The camera drifts slowly, can be
+  turned about 40 degrees, tilted a little and zoomed. A Reset view button
+  appears after any manual move. A short "Lighting the paths" screen covers the
+  build. Reduced motion is honored.
+- **Words come from the page, not the script.** The seven names, notes, card
+  titles, copy, images and links are a plain HTML list inside the page
+  (`#fallback`), extracted from `components/terrain.html` so the wording is
+  identical. The script reads them, then hides the list. Crawlers and
+  no-JavaScript visitors get the list as is; so does anyone without WebGL.
+- Files: `templates/lab/mountain.html`, `assets/js/mountain.js`,
+  `assets/css/mountain.css`, `assets/js/vendor/three.r128.min.js` (self-hosted
+  Three.js 0.128, MIT licensed). `noindex` is set on the page and the build
+  leaves it out of `sitemap.xml`. `robots.txt` still allows it, on purpose:
+  a crawler that is blocked can never read the noindex.
+- Add `?perf=1` to the address for a timing readout (response, DOM ready,
+  first paint, scene ready, and the size of the three scripts and the style).
+- Checked in headless Chrome: seven labels with the right copy, cards open and
+  their buttons navigate to the right pages, tap on a phone, keyboard open and
+  Escape close, Reset appears after a drag and the hint returns, no horizontal
+  overflow at 390, reduced motion, the no-JavaScript list and the no-WebGL
+  list. A sweep of 65 window sizes found no overlaps between spheres, rings,
+  labels, headline or moon.
+- **Open for the homepage decision:** `touch-action: none` on the canvas keeps
+  one-finger vertical scrolling from working over the scene. Fine for this
+  full-screen page. On the homepage the scene should leave vertical scroll to
+  the page and take horizontal drag and pinch. Card images are real files in
+  `assets/img/` and are stamped by the build; the script does not hard-code
+  any asset URL for that reason.
+
+---
+
 ## Working patterns that paid off
 
 - **Measure, do not eyeball.** Bounding boxes, computed styles and row margins
