@@ -275,6 +275,33 @@ Drive and Build placeholders now filled).
 
 ---
 
+## 1 November 2026 (continued): the 3D hero becomes the homepage
+
+**The lab page is promoted and removed.**
+- `components/mountain.html` (the scene markup and the plain-HTML list of the
+  seven paths) replaces `components/terrain.html`. The homepage template loads
+  `mountain.css`, self-hosted three.js and `mountain.js`. `terrain.css`,
+  `terrain.js` and the old SVG landscape are deleted, and `terrain.css` is no
+  longer linked from `components/head.html`, so every page loses one stylesheet
+  request. `/lab/mountain/` is gone.
+- The page is now indexable. It carries the normal head (canonical, social
+  tags, analytics). The seven paths and their card copy are real HTML, as before.
+- Grow and Journal light subtext are now "Curious and Always Learning" and
+  "Writings and Notes".
+- **Grow page standfirst** now reads: "Five people who changed how I think about
+  growth. This page is meant to be equal parts reading list and shoutout to a few
+  amazing minds worth learning more about."
+- Checked on the real homepage: seven labels with the right copy, cards open and
+  link to the right pages, phone tap, keyboard, Reset and hint, scroll glide,
+  zoom controls, reduced motion, the no-JavaScript and no-WebGL lists, no
+  horizontal overflow on any of the nine pages at 1440 and 390, no failed asset
+  requests, and 91 window sizes swept for overlaps (header included).
+- README and `PROJECT-SUMMARY.md` updated. Hard rules 2 to 4 and 8 in the
+  summary were rewritten, since the old card sheet, `z-index` and SVG-moon traps
+  belonged to the removed landscape.
+
+---
+
 ## Working patterns that paid off
 
 - **Measure, do not eyeball.** Bounding boxes, computed styles and row margins

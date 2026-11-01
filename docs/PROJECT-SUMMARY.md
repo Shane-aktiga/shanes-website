@@ -5,7 +5,7 @@ work on it, and what is left. For the history of how it got here, see
 `WORK-LOG.md`. For build mechanics and the design system, see the root
 `README.md`.
 
-Last updated 1 November 2026, after PR #16. Everything described here is on
+Last updated 1 November 2026, after the 3D hero went live on the homepage. Everything described here is on
 `main` and live.
 
 ---
@@ -14,13 +14,17 @@ Last updated 1 November 2026, after PR #16. Everything described here is on
 
 Shane Parreco's personal site, live at https://shaneparreco.com. A static site
 on GitHub Pages from the repo `Shane-aktiga/shanes-website`. Semantic HTML,
-modern CSS, vanilla JavaScript, inline SVG. No frameworks and no npm. One
-Python script, `tools/build.py`, stitches components into pages.
+modern CSS, vanilla JavaScript, inline SVG. No frameworks and no npm (the one
+library is three.js, self-hosted, on the homepage only). One Python script,
+`tools/build.py`, stitches components into pages.
 
-The homepage is an interactive night landscape. Each light on it is a path,
-and clicking a light opens a card with a button to that path's page. Below the
-landscape sits a short intro, a plain-link index of the same destinations, and
-recent journal notes.
+The homepage opens on a 3D night landscape of the Blue Ridge (three.js). Each
+glowing sphere is a path, and clicking one opens a card with a button to that
+path's page. The camera drifts slowly; visitors can drag to look about 40
+degrees either way, pinch (or use the + and - buttons) to zoom, and press Reset
+view to return. The scene is pinned for about half a screen of scrolling while
+the camera glides forward, then the page continues with a short intro, a
+plain-link index of the same destinations, and recent journal notes.
 
 ## The rule that matters most
 
@@ -47,9 +51,9 @@ the index and the footer.
 - **Grow keeps the URL `/optimism/`.** Only the label changed. This was a
   deliberate choice; do not rename the URL.
 - **Journal is always last**, including on mobile.
-- Desktop light positions are keyed by name in `terrain.css`
-  (`[data-sp-waypoint="work"]` and so on), so reordering markup changes the
-  mobile list, menu, index and footer but never the desktop constellation.
+- Light positions in the 3D scene are keyed by id in the `PATHS` list at the
+  top of `assets/js/mountain.js`, so reordering markup changes the menu, index
+  and footer but never the constellation.
 - Every card image is 960 by 540. The same image appears on the landscape card,
   in the homepage index, and in the hero of that path's own page, so a visitor
   recognizes where they landed.
@@ -57,12 +61,13 @@ the index and the footer.
 ## Where things live
 
 ```
-templates/        one file per page (home, 7 paths, 404, posts/ with 8 posts,
-                  lab/mountain.html, the noindex 3D prototype)
-components/       shared markup: head, header, terrain, intro, index-nav,
-                  notebook-preview, footer, page-open, page-close, hero-ridge
-assets/css/       global (tokens, first), terrain, sections, page
-assets/js/        nav.js (every page), terrain.js (home only)
+templates/        one file per page (home, 7 paths, 404, posts/ with 8 posts)
+components/       shared markup: head, header, mountain (the 3D hero), intro,
+                  index-nav, notebook-preview, footer, page-open, page-close,
+                  hero-ridge
+assets/css/       global (tokens, first), sections, page, mountain (home only)
+assets/js/        nav.js (every page); mountain.js and vendor/three.r128.min.js
+                  (home only)
 assets/img/       card art, page photos, logos; posts/ holds post images
 tools/build.py    the build; also writes sitemap.xml and robots.txt
 docs/             these two files
@@ -94,21 +99,25 @@ docs/             these two files
 1. **Never use the `iu-*` images.** They are other people's copyrighted work
    (Alan Watts, Brene Brown, Joe Hudson, John Wineland, stock landscapes).
    `/optimism/` links to each person instead. See README.
-2. **Cards open on click only, never on hover.** Desktop hover gives an
-   animated reaction but does not open anything. Hover styles live inside
-   `@media (hover: hover)` so touch devices cannot latch into them.
-3. **The mobile card is a bottom sheet moved out to `<body>`.** iOS Safari
-   contains and clips `position: fixed` inside an `overflow: hidden` ancestor.
-   Chromium does not, so this bug does not reproduce on desktop. Do not move
-   the card back into the section. Look up the open card with
-   `document.getElementById`, not `root.querySelector`, because it is no
-   longer inside `root`. That mistake once broke all seven card buttons.
-4. **`.sp-terrain__field` is `z-index: 3`, not 2.** At 2 it ties with the foot
-   strip in a flex layout and loses on document order.
+2. **Cards open on click or tap only, never on hover.** Hovering a light
+   brightens it and its ground ring but does not open anything.
+3. **The 3D hero's gestures are a deliberate split.** Up and down scrolling
+   always scrolls the page (`touch-action: pan-y` on the stage). Only sideways
+   drag, pinch and a trackpad pinch (ctrl + wheel) belong to the scene. Do not
+   add a plain wheel handler or switch the stage back to `touch-action: none`:
+   that traps visitors inside the scene. The scroll glide uses the browser's
+   own scrolling (a tall `#rail` box with a sticky stage), never an intercepted
+   wheel.
+4. **Words come from the HTML list, not the script.** The seven names, notes,
+   card copy, images and links live in `components/mountain.html` (`#fallback`).
+   `mountain.js` reads them, then hides the list. That list is also what
+   crawlers, no-JavaScript visitors and visitors without WebGL see. Do not
+   hard-code asset URLs in the script: the build only stamps cache-busting
+   hashes on URLs it finds in HTML.
 5. **Specificity trap in `global.css`.** `.sp-page a { color: inherit }` and
    `.sp-page img { max-width: 100% }` both sit at 0,1,1 and beat a bare class.
    Anything that must win carries its element: `a.sp-button`,
-   `a.sp-terrain__card-link`, `img.sp-index__media`. A second instance:
+   `a.card__link` (in `mountain.css`), `img.sp-index__media`. A second instance:
    `.sp-prose img` adds a 1px border to every article image, so a transparent
    logo needs `border: 0` stated by name.
 6. **`height: auto` on `.sp-page img` is load-bearing.** Our images carry
@@ -118,10 +127,9 @@ docs/             these two files
    `?v=<content hash>` to every `/assets/` CSS, JS and image reference in
    generated HTML. Do not hand-write `?v=` in a template. Do not reference
    assets from JavaScript without knowing they will not be stamped.
-8. **The moon is an element outside the SVG.** It sits in `terrain.html` after
-   the `</svg>`, positioned from the top with `z-index: 1`. Inside the SVG it
-   cannot be lifted above later shapes, and the SVG's bottom-anchored scaling
-   makes anything inside it drift with viewport height.
+8. **The moon is drawn in the 3D scene, placed in screen space.** `layoutMoon()`
+   in `mountain.js` puts it beside the headline when there is a gutter, or
+   below it on narrow screens, so it never sits under text or the header.
 9. **Verify images by looking at them.** Hashed filenames carry no meaning, and
    two photographs once shipped transposed. Build a contact sheet and check.
 
@@ -184,22 +192,23 @@ are preinstalled; use `python3 -m http.server 8899` from the repo root).
 6. **Fonts:** Google Fonts is blocked in the sandbox. Screenshots need the font
    files injected as base64 `@font-face`, or text renders in a fallback.
 
-## The lab page
+## The 3D hero
 
-`/lab/mountain/` is a noindex prototype of a 3D landscape for the homepage. It
-has its own scene CSS and JS plus the real header, intro, index, journal block
-and footer below a pinned scroll rail. It is not linked from anywhere and not in
-the sitemap. The homepage is unchanged. See the 1 November entry in
-`WORK-LOG.md`. Its words come from a plain HTML list in the page, copied from
-`components/terrain.html`; if homepage card copy changes, update that list too.
-Append `?perf=1` for a load-timing readout.
+The homepage hero is `components/mountain.html` plus `assets/js/mountain.js`,
+`assets/css/mountain.css` and a self-hosted `assets/js/vendor/three.r128.min.js`.
+To change a path's wording, image or link, edit its list item in
+`components/mountain.html`. To move or recolor a light, edit its `PATHS` entry
+in `mountain.js`. Append `?perf=1` to the address for a load-timing readout.
+The scene was prototyped and tuned over many rounds; the story is in
+`WORK-LOG.md` (1 November 2026). The old SVG landscape, `terrain.css` and
+`terrain.js` are gone.
 
 ## Open items
 
-0. **Decide what to do with the lab page** after testing load time and feel on
-   the real site: promote it to the homepage, keep it as a lab page, or remove
-   it. Scrolling past the scene already works (rail plus pan-y gestures); the
-   remaining work is swapping the real homepage hero for it and a real-phone check.
+0. **Real-device check of the 3D hero.** Verified in headless Chrome only.
+   Still worth watching on real hardware: Safari trackpad pinch on a Mac, and
+   iPhone address-bar behavior with the pinned stage. Known tight spot: a window
+   under about 560px tall can squeeze the Fly label against the Build light.
 
 1. **Two labelled photo placeholders.** `templates/drive.html` wants a
    Thursday league race screenshot. `templates/play.html` wants a track or

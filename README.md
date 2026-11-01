@@ -51,10 +51,11 @@ in the homepage index, and in the hero of that path's own page, so a visitor
 sees the same picture on the way in as on arrival. `wp-notebook.jpg` keeps its
 old name; the others were renamed to match their path.
 
-**Desktop waypoint positions are keyed by name, not by order.** Each light's
-coordinates live in `terrain.css` against `[data-sp-waypoint="work"]` and so
-on. Reordering the markup changes the mobile list, the menu, the index and
-the footer, and leaves the desktop constellation exactly where it is.
+**Each light's position in the 3D scene is keyed by id, not by order.** The
+coordinates live in the `PATHS` list at the top of `assets/js/mountain.js`
+(`id: 'work'`, `x`, `z`, `kind`, `delay`). Reordering the markup in
+`components/mountain.html` changes the menu, the index and the footer, and
+leaves the constellation exactly where it is.
 
 ---
 
@@ -90,7 +91,7 @@ the footer, and leaves the desktop constellation exactly where it is.
 │   ├── page-open.html          doctype through <main>
 │   ├── page-close.html         </main> through </html>
 │   ├── header.html             1. Header and the full-screen menu
-│   ├── terrain.html            2. Interactive Terrain
+│   ├── mountain.html           2. The 3D landscape hero (home page only)
 │   ├── index-nav.html          3. Explore Index
 │   ├── notebook-preview.html   4. From the Journal
 │   ├── footer.html             5. Connect
@@ -100,13 +101,15 @@ the footer, and leaves the desktop constellation exactly where it is.
 ├── assets/
 │   ├── css/
 │   │   ├── global.css          design tokens + base. First, always.
-│   │   ├── terrain.css         the landscape, waypoints, cards, scrim
 │   │   ├── sections.css        header, menu, index, preview, footer
-│   │   └── page.css            interior pages and articles
+│   │   ├── page.css            interior pages and articles
+│   │   └── mountain.css        the 3D hero: stage, labels, cards, loader.
+│   │                           Home page only.
 │   ├── js/
 │   │   ├── nav.js              the header menu. Every page, via head.html.
-│   │   └── terrain.js          the landscape and cards. Home page only,
-│   │                           loaded at the foot of templates/home.html.
+│   │   ├── mountain.js         the 3D scene, camera, cards. Home page only.
+│   │   └── vendor/
+│   │       └── three.r128.min.js   three.js 0.128 (MIT), self-hosted
 │   └── img/                    waypoint and post images, favicons, OG image
 │
 └── tools/
@@ -165,10 +168,11 @@ preview from it. The structure is already shaped for that.
 
 ### Renaming or reordering a path
 
-Six places need to agree: `components/terrain.html` (waypoint, card, keys),
-`components/header.html` (menu), `components/index-nav.html`,
-`components/footer.html`, the template's own `@var` block, and the
-`[data-sp-waypoint="..."]` position rules in `assets/css/terrain.css`. The
+Six places need to agree: `components/mountain.html` (the path's list item,
+which carries its name, note, card copy, image and link), `components/header.html` (menu),
+`components/index-nav.html`, `components/footer.html`, the template's own
+`@var` block, and the `PATHS` entry in `assets/js/mountain.js` (position and
+light color). The
 card image is also used by the index item and the page hero, and each
 `sp-onward` block at the foot of the other pages may link to it. Then rebuild
 and delete the old output folder.
@@ -200,8 +204,17 @@ its waypoint, with a three-way fallback (above, else below, else beside) so a
 tall card never lands on top of the button that opened it, and a clamp that
 keeps it clear of the fixed header.
 
-Below 900px it becomes a bottom sheet, and three things in that path look
-removable but are not.
+On the 3D hero, the card is a floating panel on desktop and a bottom sheet on
+phones. The old landscape needed a body-pinning workaround for iOS Safari;
+the new one keeps the card inside a pinned stage that is not clipped, so none
+of that is needed. (The history is in `docs/WORK-LOG.md`, 22 October.)
+
+The notes below describe the previous landscape and are kept only because the
+same traps can appear in any card that sits inside an `overflow: hidden`
+section.
+
+Below 900px it became a bottom sheet, and three things in that path looked
+removable but were not.
 
 **1. The open sheet is moved out to `<body>`.**
 iOS Safari treats `overflow: hidden` on an ancestor as grounds to contain and
@@ -330,12 +343,14 @@ Every class is namespaced `sp-`.
   yesterday's stylesheet against today's markup. An unchanged file keeps its
   URL and stays cached. Do not write `?v=` by hand.
 - Two scripts, both deferred, no jQuery and no animation library. Only
-  `nav.js` (3 KB) is on every page. `terrain.js` (16 KB) is loaded by the
-  home template alone, because that is the only page with a landscape on it,
-  so every interior page and every post carries 3 KB of JavaScript in total.
-- Parallax runs on a single `requestAnimationFrame` loop that stops itself
-  when the pointer stops. The sticky header uses an `IntersectionObserver`.
-  No scroll listeners anywhere.
+  `nav.js` (3 KB) is on every page. `mountain.js` (38 KB) and three.js
+  (590 KB before compression) are loaded by the home template alone, because
+  that is the only page with the 3D landscape, so every interior page and every
+  post still carries 3 KB of JavaScript in total.
+- The 3D scene runs on one `requestAnimationFrame` loop that pauses when the
+  tab is hidden or the scene scrolls offscreen. The sticky header uses an
+  `IntersectionObserver`. The scene reads scroll position once per frame
+  instead of using a scroll listener.
 
 ---
 
