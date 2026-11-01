@@ -5,7 +5,7 @@ work on it, and what is left. For the history of how it got here, see
 `WORK-LOG.md`. For build mechanics and the design system, see the root
 `README.md`.
 
-Last updated 31 October 2026, after PR #15. Everything described here is on
+Last updated 1 November 2026, after PR #16. Everything described here is on
 `main` and live.
 
 ---
@@ -57,7 +57,8 @@ the index and the footer.
 ## Where things live
 
 ```
-templates/        one file per page (home, 7 paths, 404, posts/ with 8 posts)
+templates/        one file per page (home, 7 paths, 404, posts/ with 8 posts,
+                  lab/mountain.html, the noindex 3D prototype)
 components/       shared markup: head, header, terrain, intro, index-nav,
                   notebook-preview, footer, page-open, page-close, hero-ridge
 assets/css/       global (tokens, first), terrain, sections, page
@@ -183,7 +184,20 @@ are preinstalled; use `python3 -m http.server 8899` from the repo root).
 6. **Fonts:** Google Fonts is blocked in the sandbox. Screenshots need the font
    files injected as base64 `@font-face`, or text renders in a fallback.
 
+## The lab page
+
+`/lab/mountain/` is a noindex prototype of a 3D landscape for the homepage. It
+is standalone (own CSS and JS, no header or footer), not linked from anywhere,
+and not in the sitemap. The homepage is unchanged. See the 1 November entry in
+`WORK-LOG.md`. Its words come from a plain HTML list in the page, copied from
+`components/terrain.html`; if homepage card copy changes, update that list too.
+Append `?perf=1` for a load-timing readout.
+
 ## Open items
+
+0. **Decide what to do with the lab page** after testing load time and feel on
+   the real site: promote it to the homepage, keep it as a lab page, or remove
+   it. Promoting needs vertical scroll left to the page (see the work log).
 
 1. **Two labelled photo placeholders.** `templates/drive.html` wants a
    Thursday league race screenshot. `templates/play.html` wants a track or

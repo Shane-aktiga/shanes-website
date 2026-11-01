@@ -1,0 +1,113 @@
+<!-- @var out: lab/mountain/index.html -->
+<!-- @var path: /lab/mountain/ -->
+<!-- @var title: Mountain Explorer (prototype) - Shane Parreco -->
+<!-- @var description: A 3D Blue Ridge landscape prototype for shaneparreco.com. Seven paths, one view. -->
+<!-- @var noindex: true -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}">
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#070A14">
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="/assets/img/favicon-32.png" sizes="32x32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/mountain.css">
+  <!-- Deferred, in order: they download while the loading screen is already on screen. -->
+  <script src="/assets/js/vendor/three.r128.min.js" defer></script>
+  <script src="/assets/js/mountain.js" defer></script>
+  <noscript><style>.loader, .ui, .labels, .cards, #gl { display: none !important; } .fallback { display: flex !important; }</style></noscript>
+</head>
+<body>
+<main class="stage" id="stage">
+  <canvas id="gl" aria-hidden="true"></canvas>
+
+  <div class="labels" id="labels">
+    <p style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0">
+      Seven paths to explore. Each opens a short description with a link. Left and right arrow keys turn the view, plus and minus zoom it.
+    </p>
+  </div>
+  <div class="cards" id="cards"></div>
+  <div class="backdrop" id="backdrop"></div>
+
+  <div class="ui">
+    <a class="tag" href="/">Prototype &middot; back to site</a>
+    <div class="intro">
+      <p class="eyebrow">Seven paths. All led to now. Pick one and explore.</p>
+      <h1 class="title">Welcome! Feel free to have a look around.</h1>
+    </div>
+    <div class="foot">
+      <p class="hint" id="hint">Drag to look around. Scroll or pinch to zoom.</p>
+      <button class="reset" id="reset" type="button">Reset view</button>
+    </div>
+  </div>
+
+  <div class="loader" id="loader" role="status">
+    <div class="loader__dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="loader__text">Lighting the paths</p>
+  </div>
+
+  <!-- The seven paths as plain HTML. Crawlers and no-JavaScript visitors get this list as is;
+       the scene reads its names, notes, card text, images and links from here, then hides it. -->
+  <nav class="fallback" id="fallback" aria-label="The seven paths">
+    <p class="title" style="text-align:center">Welcome! Feel free to have a look around.</p>
+    <ul id="fallback-list">
+      <li class="fb-item" data-id="work">
+        <a class="fb-link" href="/work/"><span class="fb-name">Work</span></a>
+        <span class="fb-note">Aktiga &middot; OTC</span>
+        <img src="/assets/img/work-card.jpg" alt="The Aktiga office, a circular slatted wall sculpture beside an open workspace" width="960" height="540" loading="lazy" decoding="async">
+        <h2 class="fb-title">Aktiga, and the long detour that got me here</h2>
+        <p class="fb-text">A software and product studio in Asheville, started in 2023 out of Online Training Concepts, which I founded in 2019.</p>
+      </li>
+      <li class="fb-item" data-id="fly">
+        <a class="fb-link" href="/fly/"><span class="fb-name">Fly</span></a>
+        <span class="fb-note">Paragliding since 2009</span>
+        <img src="/assets/img/fly-card.jpg" alt="Three pilots kiting their wings on a ridge at sunset" width="960" height="540" loading="lazy" decoding="async">
+        <h2 class="fb-title">Paragliding in the Blue Ridge</h2>
+        <p class="fb-text">Flying since 2009, instructing since 2018. Most of what I know about patience I learned waiting on a hill.</p>
+      </li>
+      <li class="fb-item" data-id="play">
+        <a class="fb-link" href="/play/"><span class="fb-name">Play</span></a>
+        <span class="fb-note">Drums, Keys, and Mallets</span>
+        <img src="/assets/img/play-card.jpg" alt="Shane on drums and Jay on bass playing outdoors, a small child dancing between them" width="960" height="540" loading="lazy" decoding="async">
+        <h2 class="fb-title">Two bands, and a music degree I went back for</h2>
+        <p class="fb-text">Keys and mallets. Soul and funk with one group, jazz fusion in odd meters with another.</p>
+      </li>
+      <li class="fb-item" data-id="drive">
+        <a class="fb-link" href="/drive/"><span class="fb-name">Drive</span></a>
+        <span class="fb-note">Sim racing</span>
+        <img src="/assets/img/drive-card.jpg" alt="A row of sim racing rigs at The Track at Asheville, each with triple screens" width="960" height="540" loading="lazy" decoding="async">
+        <h2 class="fb-title">Sim racing, and what a wheel teaches about patience</h2>
+        <p class="fb-text">The corner you rush is the corner you lose. The same lesson as the hill, the job site and the release.</p>
+      </li>
+      <li class="fb-item" data-id="build">
+        <a class="fb-link" href="/build/"><span class="fb-name">Build</span></a>
+        <span class="fb-note">20 yrs of carpentry</span>
+        <img src="/assets/img/build-card.jpg" alt="A timber house in Dunlap with a newly built wraparound porch and railing" width="960" height="540" loading="lazy" decoding="async">
+        <h2 class="fb-title">Twenty years with a tool belt</h2>
+        <p class="fb-text">The longest thing I have ever done, and the one that explains the rest. Measure twice, expect the wall to be out of plumb.</p>
+      </li>
+      <li class="fb-item" data-id="optimism">
+        <a class="fb-link" href="/optimism/"><span class="fb-name">Grow</span></a>
+        <span class="fb-note">Curiosity and a better way</span>
+        <img src="/assets/img/grow-card.jpg" alt="Sunset over forested Blue Ridge ridgelines, seen from the air" width="960" height="540" loading="lazy" decoding="async">
+        <h2 class="fb-title">Optimism is a method, not a mood</h2>
+        <p class="fb-text">Continuous improvement pointed inward, and the people who taught me to look at things that way.</p>
+      </li>
+      <li class="fb-item" data-id="journal">
+        <a class="fb-link" href="/journal/"><span class="fb-name">Journal</span></a>
+        <span class="fb-note">Writing &amp; notes</span>
+        <img src="/assets/img/wp-notebook.jpg" alt="Wide beach and cloud bank at Playa Linda, Costa Rica" width="960" height="540" loading="lazy" decoding="async">
+        <h2 class="fb-title">Notes, when there is something worth saying</h2>
+        <p class="fb-text">Occasional writing about building things, teaching people and paying attention. No schedule, no newsletter.</p>
+      </li>
+    </ul>
+  </nav>
+</main>
+</body>
+</html>
