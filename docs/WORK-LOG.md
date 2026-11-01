@@ -235,12 +235,39 @@ Drive and Build placeholders now filled).
   overflow at 390, reduced motion, the no-JavaScript list and the no-WebGL
   list. A sweep of 65 window sizes found no overlaps between spheres, rings,
   labels, headline or moon.
-- **Open for the homepage decision:** `touch-action: none` on the canvas keeps
-  one-finger vertical scrolling from working over the scene. Fine for this
-  full-screen page. On the homepage the scene should leave vertical scroll to
-  the page and take horizontal drag and pinch. Card images are real files in
+- Card images are real files in
   `assets/img/` and are stamped by the build; the script does not hard-code
   any asset URL for that reason.
+
+---
+
+**Lab page, round 2: scrolling past the scene (second PR)**
+- The scene no longer traps the page. Plain up and down scrolling (mouse wheel,
+  trackpad, one-finger swipe) always scrolls the site. Sideways drag turns the
+  view, a pinch zooms the scene (trackpad pinch on desktop), and desktop gets
+  small + and - buttons. `touch-action` on the canvas went from `none` to
+  `pan-y`, and is also set on the stage so a pinch can never zoom the whole page.
+- **Scroll rail.** The scene sits in a tall box (`#rail`, 190svh) and is pinned
+  (`position: sticky`) while the visitor scrolls through it. Scroll progress
+  glides the camera forward and lower, fades the headline, and melts the scene's
+  bottom edge into the page. Then the real homepage sections follow (intro,
+  index, journal, footer, header). This uses the browser's own scrolling, never
+  an intercepted wheel, so scrollbar, keyboard and back-up all behave. With
+  reduced motion the rail is off and the page just scrolls. Opening a card and
+  then scrolling closes the card.
+- The on-screen hint is one sentence per device: "Drag to look around or pinch
+  to zoom." on touch screens and "Drag to look around or use + and - to zoom."
+  with a mouse. A small "Scroll" cue with a chevron sits in the bottom-left
+  corner (it fades once scrolling starts, and clicking it scrolls past the
+  scene). The hint is hidden on windows shorter than 700px, where it would
+  run into the paths.
+- Pointer listeners moved from the canvas to the whole stage, so a finger that
+  lands on a label can still drag or pinch.
+- The site header is on the page. On screens under 900px wide the headline sits
+  lower to clear it. Known tight spot: windows shorter than about 560px can
+  squeeze the Fly label against the Build light.
+- Not tested on real hardware: Safari trackpad pinch (handled through Safari's
+  gesture events) and iPhone address-bar behavior with the pinned stage.
 
 ---
 
