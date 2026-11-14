@@ -37,6 +37,7 @@
     else if (store('wr-instant') !== null) instant = store('wr-instant') === '1';
     else instant = reducedMQ.matches;
   })();
+  var finalVariant = (qs.get('final') || 'a').toLowerCase() === 'b' ? 'b' : 'a';   // review option for the last slide; press V to flip
   var showDrafts = qs.get('review') === '1' || store('wr-drafts') === '1';   // review tags are off by default: nothing unfinished-looking on the projector
 
   // ---- The mountain -------------------------------------------------------------
@@ -146,6 +147,17 @@
       if (s.eyebrow) text.appendChild(el('p', 'sl-eyebrow', s.eyebrow));
       text.appendChild(el('h2', 'sl-title', s.title));
       paragraphs(text, s.body);
+      if (s.quotes) {
+        var qs2 = el('div', 'sl-pquotes');
+        s.quotes.forEach(function (q) {
+          var f = el('figure', 'sl-pquote' + (q.portrait ? ' sl-pquote--portrait' : ''));
+          if (q.portrait) { var pi = el('img'); pi.src = q.portrait; pi.alt = q.who; f.appendChild(pi); }
+          var bq = el('blockquote', 'sl-pquote__text', q.text);
+          f.appendChild(bq); f.appendChild(el('figcaption', 'sl-pquote__who', q.who));
+          qs2.appendChild(f);
+        });
+        text.appendChild(qs2);
+      }
       root.appendChild(text);
     } else if (t === 'quote') {
       text = el('div', 'sl-text sl-text--quote');
@@ -166,6 +178,22 @@
         ol.appendChild(li);
       });
       text.appendChild(ol); root.appendChild(text);
+    } else if (t === 'final') {
+      // The last slide: one dominant line, with a small sign-off and the three web addresses.
+      // Two layout options for review: A = right-aligned stair-step, B = Aktiga + OTC together, personal site beneath.
+      text = el('div', 'sl-text sl-text--final');
+      text.appendChild(el('h2', 'sl-title sl-title--final', s.title));
+      root.appendChild(text);
+      var sign = el('div', 'sl-sign');
+      if (s.byline) sign.appendChild(el('p', 'sl-sign__name', s.byline));
+      var urls = s.urls || [];
+      var ua = el('ul', 'sl-urls sl-urls--a'); urls.forEach(function (u) { ua.appendChild(el('li', null, u)); });
+      var ub = el('div', 'sl-urls sl-urls--b');
+      ub.appendChild(el('p', null, (urls[0] || '') + '   ·   ' + (urls[2] || '')));
+      ub.appendChild(el('p', null, urls[1] || ''));
+      sign.appendChild(ua); sign.appendChild(ub);
+      root.appendChild(sign);
+      root.dataset.variant = finalVariant;
     } else if (t === 'closing') {
       text = el('div', 'sl-text sl-text--center');
       if (s.eyebrow) text.appendChild(el('p', 'sl-eyebrow', s.eyebrow));
@@ -304,6 +332,7 @@
     else if (k === 'i' || k === 'I') { e.preventDefault(); toggleInstant(); }
     else if (k === 'n' || k === 'N') { e.preventDefault(); toggleNotes(); }
     else if (k === 'd' || k === 'D') { e.preventDefault(); toggleDrafts(); }
+    else if (k === 'v' || k === 'V') { e.preventDefault(); finalVariant = finalVariant === 'a' ? 'b' : 'a'; var fs = document.querySelectorAll('.sl--final'); for (var fi = 0; fi < fs.length; fi++) fs[fi].dataset.variant = finalVariant; }
     else if (k === '?' || k === 'h' || k === 'H') { e.preventDefault(); toggleHelp(); }
     else if (k === 'Escape') { helpEl.hidden = true; }
   }, true);
