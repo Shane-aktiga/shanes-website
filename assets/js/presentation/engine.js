@@ -10,7 +10,7 @@
    Input is plain keyboard events, so a standard presentation clicker works with no special setup.
      Next:     ArrowRight  PageDown  Space  Enter  ArrowDown
      Previous: ArrowLeft   PageUp    Backspace  ArrowUp
-     Also:     Home / End  F fullscreen  I skip animations  N speaker notes  D hide DRAFT tags  ? help
+     Also:     Home / End  F fullscreen  I skip animations  N speaker notes  D review tags  ? help
    Position lives in the address as #/chapter/slide (1-based), written with replaceState, so a refresh keeps
    your place and the browser's Back button leaves the page normally. Editing the hash jumps to that slide. */
 (function () {
@@ -37,7 +37,7 @@
     else if (store('wr-instant') !== null) instant = store('wr-instant') === '1';
     else instant = reducedMQ.matches;
   })();
-  var showDrafts = store('wr-drafts') !== '0';
+  var showDrafts = qs.get('review') === '1' || store('wr-drafts') === '1';   // review tags are off by default: nothing unfinished-looking on the projector
 
   // ---- The mountain -------------------------------------------------------------
   var world = null;
@@ -123,15 +123,8 @@
   }
   function photo(img, cls) {
     var fig = el('figure', cls || 'sl-fig');
-    if (img.src) {
-      var im = el('img'); im.src = img.src; im.alt = img.alt || ''; im.decoding = 'async';
-      fig.appendChild(im);
-    } else {
-      var ph = el('div', 'sl-placeholder');
-      ph.appendChild(el('span', 'sl-placeholder__tag', 'PHOTO NEEDED'));
-      ph.appendChild(el('span', 'sl-placeholder__text', img.placeholder || 'Add a photo'));
-      fig.appendChild(ph);
-    }
+    var im = el('img'); im.src = img.src; im.alt = img.alt || ''; im.decoding = 'async';
+    fig.appendChild(im);
     if (img.caption) fig.appendChild(el('figcaption', 'sl-caption', img.caption));
     return fig;
   }
@@ -142,9 +135,10 @@
     root.dataset.side = ch.node.anchor != null && ch.node.anchor < 0.5 ? 'right' : 'left';   // text goes opposite the waypoint
     var t = s.type, text;
     if (t === 'full') {
-      if (s.image) { var bg = photo(s.image, 'sl-bleed'); root.appendChild(bg); }
-      text = el('div', 'sl-text sl-text--cap');
-      if (s.title) text.appendChild(el('h2', 'sl-title', s.title));
+      text = el('div', 'sl-text');
+      if (s.eyebrow) text.appendChild(el('p', 'sl-eyebrow', s.eyebrow));
+      text.appendChild(el('h2', 'sl-title', s.title));
+      paragraphs(text, s.body);
       root.appendChild(text);
     } else if (t === 'split') {
       text = el('div', 'sl-text');
@@ -152,7 +146,6 @@
       text.appendChild(el('h2', 'sl-title', s.title));
       paragraphs(text, s.body);
       root.appendChild(text);
-      if (s.image) root.appendChild(photo(s.image));
     } else if (t === 'quote') {
       text = el('div', 'sl-text sl-text--quote');
       if (s.eyebrow) text.appendChild(el('p', 'sl-eyebrow', s.eyebrow));
@@ -164,7 +157,7 @@
       text = el('div', 'sl-text sl-text--wide');
       if (s.eyebrow) text.appendChild(el('p', 'sl-eyebrow', s.eyebrow));
       text.appendChild(el('h2', 'sl-title', s.title));
-      var ol = el('ol', 'sl-timeline');
+      var ol = el('ol', 'sl-timeline'); ol.style.setProperty('--n', (s.items || []).length || 3);
       (s.items || []).forEach(function (it) {
         var li = el('li', 'sl-timeline__item');
         li.appendChild(el('span', 'sl-timeline__when', it.when));
@@ -186,9 +179,12 @@
       if (s.byline) text.appendChild(el('p', 'sl-byline', s.byline));
       root.appendChild(text);
     }
-    var hasPlaceholder = s.image && s.image.placeholder;
-    if ((s.status !== 'verified' || hasPlaceholder) && showDrafts) {
-      root.appendChild(el('span', 'sl-draft', hasPlaceholder ? 'DRAFT · PHOTO NEEDED' : 'DRAFT'));
+    // A photo sits under the words in the same column, so the mountain stays visible on the other side.
+    if (s.image && s.image.src && text) text.appendChild(photo(s.image, t === 'full' ? 'sl-fig sl-fig--lg' : 'sl-fig'));
+    var wanted = s.image && s.image.wanted && !/^none/i.test(s.image.wanted);
+    if (showDrafts && (s.status !== 'verified' || wanted)) {
+      var tag = (s.status !== 'verified' ? 'DRAFT' : '') + (s.status !== 'verified' && wanted ? ' · ' : '') + (wanted ? 'PHOTO WANTED: ' + s.image.wanted : '');
+      root.appendChild(el('span', 'sl-draft', tag));
     }
     return root;
   }
@@ -219,7 +215,7 @@
     });
     btnPrev.disabled = idx === 0; btnNext.disabled = idx === steps.length - 1;
     elLive.textContent = 'Slide ' + (idx + 1) + ' of ' + steps.length + '. ' + ch.title + '.';
-    elNotesText.textContent = st.slide.notes || '(no notes for this slide)';
+    elNotesText.textContent = (ch.minutes ? '[' + ch.title + ' · about ' + ch.minutes + ' min' + (st.slide.editorial ? ' · editorial line' : '') + '] ' : '') + (st.slide.notes || '(no notes for this slide)');
     body.dataset.status = st.slide.status || 'draft';
   }
   function writeHash() {
