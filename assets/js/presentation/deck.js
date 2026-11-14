@@ -10,13 +10,16 @@
 
    Slide fields
      type      title | split | full | quote | timeline | closing
-               split = words with a small photo under them, full = photo-led (a larger photo, then the words)
+               split = words with a photo under them, full = same with a larger frame. All photos stay contained.
+               (Legacy type name: 'full' never means a full-screen photo.)
                Panels always sit on the side AWAY from the glowing waypoint, so the mountain stays visible.
      eyebrow   small label above the title (optional)
      title     the headline (one key idea per slide)
      body      one to three short lines (string or array). Anything longer belongs in notes.
      items     timeline only: [{ when, what }, ...]
-     image     { src, alt, caption }  an existing site photo or a new one
+     image     { src, alt, caption, ratio, pos }  a site photo or a new one. ratio (e.g. '4 / 3') and pos (CSS object-position)
+             choose the frame crop. Photos are always contained frames, never full screen. Add a caption only for facts
+             we know: no places, dates or credits are guessed.
                { wanted: 'description' }  no photo yet: the slide runs text-only over the mountain and a
                "PHOTO WANTED" tag shows in review mode (press D)
      editorial true when the on-screen words are editorial copy, NOT a verbatim quote from Shane. Quote slides
@@ -50,9 +53,9 @@ window.DECK = {
         { id: 'roots-title', type: 'title', status: 'verified',
           eyebrow: 'Roots',
           title: 'Born into a business',
-          body: 'A family business. A childhood on job sites.',
-          image: { wanted: 'A family construction or archival family-business photo, if Shane has one' },
-          notes: 'Three generations in construction and stone work: an immigrant Italian stonemason, then a Maryland construction company outside DC led by Shane\'s grandfather, father and uncle. Childhood weekends and summers on job sites: fuel trucks, machinery, foremen, hands-on work. Check the preferred spelling of the company name before showing it.' },
+          body: 'Arnold Parreco & Sons. A family business. A childhood on job sites.',
+          image: { src: '/assets/img/wr-baby.jpg', alt: 'A laughing baby in a pink outfit sitting beside a stuffed rabbit', ratio: '4 / 3', pos: 'center 30%' },
+          notes: 'Three generations in construction and stone work: an immigrant Italian stonemason, then a Maryland construction company outside DC led by Shane\'s grandfather, father and uncle. Childhood weekends and summers on job sites: fuel trucks, machinery, foremen, hands-on work. The family company is Arnold Parreco & Sons (name approved by Shane). The opening photo is a cameo, not a photo of the business; a real jobsite photo would replace it.' },
         { id: 'roots-yours', type: 'split', status: 'verified',
           eyebrow: 'Roots',
           title: 'Good at it doesn\'t mean it\'s yours',
@@ -73,17 +76,17 @@ window.DECK = {
       id: 'way', title: 'Finding My Way', short: 'My way', kind: 'lamp', minutes: 8,
       node: { x: 30, z: -34, az: 12, el: 16, dist: 52, anchor: 0.3 },
       slides: [
-        { id: 'way-mountains', type: 'full', status: 'verified',
+        { id: 'way-mountains', type: 'split', status: 'verified',
           eyebrow: 'Finding my way',
           title: 'The mountains felt like home',
           body: 'Boone, the Outer Banks, Brevard.',
-          image: { wanted: 'Pisgah Forest or the US 280 approach, or one of Shane\'s own mountain photos' },
+          image: { src: '/assets/img/wr-mountain-hike.jpg', alt: 'Shane smiling on a grassy mountain ridge with layered blue mountains behind him', ratio: '4 / 3', pos: 'center 40%' },
           notes: 'Campbell University 1996 to 1998; Appalachian State 1998 to 1999; Nags Head and outdoor education on the Outer Banks. Arriving in Brevard around 2002 felt like home, especially the descent toward Pisgah Forest from Mills River.' },
         { id: 'way-outdoors', type: 'quote', status: 'verified', editorial: true,
           eyebrow: 'Finding my way',
           title: 'When outside became my comfort zone',
           body: 'What happens when the outdoors becomes your comfort zone?',
-          image: { wanted: 'A backpacking or Outward Bound photo, if available' },
+          image: { src: '/assets/img/wr-sunset-walk.jpg', alt: 'A silhouetted hiker with a pack walking against an orange sunset sky', ratio: '3 / 2', pos: 'center' },
           notes: 'Wording is close to Shane\'s spoken phrasing, shown as an editorial line. A wilderness leadership immersion semester challenged the idea that camping must push you out of your comfort zone. The next kind of growth meant going inside: studying organizations and people.' },
         { id: 'way-ideas', type: 'split', status: 'verified',
           eyebrow: 'Finding my way',
@@ -98,13 +101,12 @@ window.DECK = {
       id: 'bliss', title: 'Following My Bliss', short: 'Bliss', kind: 'beacon', minutes: 6,
       node: { x: -34, z: -56, az: -14, el: 16, dist: 54, anchor: 0.7 },
       slides: [
-        { id: 'bliss-music', type: 'full', status: 'verified',
+        { id: 'bliss-music', type: 'split', status: 'verified',
           eyebrow: 'Following my bliss',
           title: 'Music was a choice',
           body: 'I went back to Brevard to pursue percussion.',
-          image: { src: '/assets/img/play-band.jpg', alt: 'Shane on drums with a guitarist and a bassist playing outside a brewery',
-                   caption: 'High Flying Criminals. Photograph by Ken Voltz.' },
-          notes: 'Back to Brevard for a second degree in 2006; percussion and music performance in 2008. Audio, lighting and recording; touring and managing bands. Carpentry continued in parallel. Keep the Ken Voltz credit on screen.' },
+          image: { src: '/assets/img/wr-drumming.jpg', alt: 'Shane playing a drum kit outdoors', ratio: '4 / 3', pos: 'center' },
+          notes: 'Back to Brevard for a second degree in 2006; percussion and music performance in 2008. Audio, lighting and recording; touring and managing bands. Carpentry continued in parallel. The band photo High Flying Criminals (Ken Voltz) is available if a band shot is wanted: keep the credit on screen.' },
         { id: 'bliss-aviation', type: 'split', status: 'verified',
           eyebrow: 'Following my bliss',
           title: 'Aviation was an older dream',
@@ -112,11 +114,11 @@ window.DECK = {
           image: { src: '/assets/img/fly-ridge.jpg', alt: 'Three paragliders in a wide evening sky over a ridge',
                    caption: 'Paragliders over a ridge, much later in life' },
           notes: 'Childhood model jets (F-14, F-16, F-4, A-10) hung from fishing line in simulated dogfights, moved by the ceiling fan. A love of flight, racing games and aviation films. A childhood model-airplane photo would replace this image if one exists.' },
-        { id: 'bliss-sky', type: 'full', status: 'verified',
+        { id: 'bliss-sky', type: 'split', status: 'verified',
           eyebrow: 'Following my bliss',
           title: 'Finding the sky',
           body: 'Paragliding. Skydiving. Wind-tunnel flight.',
-          image: { src: '/assets/img/fly-sunset.jpg', alt: 'A paraglider flying at sunset under orange cloud, other pilots and wings on the ground below', caption: 'Evening flight' },
+          image: { src: '/assets/img/wr-skydive-selfie.jpg', alt: 'Shane smiling in a skydiving helmet in freefall above farmland', ratio: '4 / 3', pos: 'center 35%' },
           notes: 'Paragliding training began near western North Carolina and finished in Utah at Point of the Mountain. Skydiving, and work at the Maggie Valley wind tunnel. During a hard stretch in life, flying reconnected him with joy. Keep intimate details off the screen. A wind-tunnel photo would be a good optional addition.' }
       ]
     },
@@ -154,19 +156,19 @@ window.DECK = {
           eyebrow: 'Starting over',
           title: 'Freedom can feel overwhelming',
           body: 'My first grocery trip was almost too much.',
-          image: { wanted: 'Optional personal image. Text only is fine.' },
+          image: { src: '/assets/img/wr-portrait-clouds.jpg', alt: 'Shane smiling in front of a hillside under a dramatic cloudy sky', ratio: '4 / 3', pos: 'center 60%' },
           notes: 'The first grocery store after release nearly caused panic because of the sheer amount of choice. Reentry meant a halfway house, then his parents\' home, restricted travel, and rebuilding trust.' },
         { id: 'again-intention', type: 'quote', status: 'verified', editorial: true,
           eyebrow: 'Starting over',
           title: 'Rebuilding with intention',
           body: 'Work. Save. Reconnect. Fly.',
-          image: { src: '/assets/img/fly-kiting.jpg', alt: 'Kiting a mini-wing on the beach, the wing overhead and the ocean behind', caption: 'Kiting at the beach' },
+          image: { src: '/assets/img/wr-ground-handling.jpg', alt: 'A pilot ground-handling a paraglider with a moustache graphic over a hillside', ratio: '4 / 3', pos: 'center 40%' },
           notes: 'Carpentry work in DC. He waited for permission to travel and train, aimed for his instructor qualification and found a skydiving drop zone. Instructor rating completed in 2018.' },
-        { id: 'again-marathon', type: 'full', status: 'verified',
+        { id: 'again-marathon', type: 'split', status: 'verified',
           eyebrow: 'Starting over',
           title: 'The Music Marathon',
           body: 'Three shows in five days. A reason to return.',
-          image: { wanted: 'A band photo from that period. Existing site band photos may be from later years, so none is used here.' },
+          image: { src: '/assets/img/wr-music-marathon.jpg', alt: 'A band playing in a venue with drums, percussion and bass, a little blurred', ratio: '4 / 3', pos: 'center 40%' },
           notes: 'A visit to Brevard: two days of rehearsal, then three gigs in five days with friends. It led to a new band and helped seal the move back to Brevard and Asheville.' }
       ]
     },
@@ -245,7 +247,7 @@ window.DECK = {
           title: 'Not technology for its own sake',
           body: 'More capacity for people doing essential work.',
           image: { wanted: 'Client-approved screenshots only. No sensitive client data on screen.' },
-          notes: 'Aktiga works with mission-driven nonprofit teams that are often overworked and under-resourced. Helping them serve people gave the company a clear focus and gave Shane meaning, despite his early reluctance about agency work. Get each client\'s approval before naming or showing them.' },
+          notes: 'Aktiga works with mission-driven nonprofit teams that are often overworked and under-resourced. Helping them serve people gave the company a clear focus and gave Shane meaning, despite his early reluctance about agency work. Publicly documented mission-driven clients and prospects (Homeward Bound of WNC and its AHOPE Day Center, ArtsAVL, Invest Appalachia) can be named. Do not show confidential details, sensitive data or client screenshots that are not approved.' },
         { id: 'mean-products', type: 'split', status: 'verified',
           eyebrow: 'Finding meaning in the work',
           title: 'Products and purpose can coexist',

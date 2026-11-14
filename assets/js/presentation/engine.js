@@ -124,6 +124,7 @@
   function photo(img, cls) {
     var fig = el('figure', cls || 'sl-fig');
     var im = el('img'); im.src = img.src; im.alt = img.alt || ''; im.decoding = 'async';
+    if (img.ratio) im.style.aspectRatio = img.ratio; if (img.pos) im.style.objectPosition = img.pos;
     fig.appendChild(im);
     if (img.caption) fig.appendChild(el('figcaption', 'sl-caption', img.caption));
     return fig;
@@ -215,7 +216,7 @@
     });
     btnPrev.disabled = idx === 0; btnNext.disabled = idx === steps.length - 1;
     elLive.textContent = 'Slide ' + (idx + 1) + ' of ' + steps.length + '. ' + ch.title + '.';
-    elNotesText.textContent = (ch.minutes ? '[' + ch.title + ' · about ' + ch.minutes + ' min' + (st.slide.editorial ? ' · editorial line' : '') + '] ' : '') + (st.slide.notes || '(no notes for this slide)');
+    elNotesText.textContent = (ch.minutes ? '[' + ch.title + ' · about ' + ch.minutes + ' min' + (st.slide.editorial ? ' · editorial line' : '') + '] ' : '') + (st.slide.notes || '(no notes for this slide)') + (window.DECK_PRIVATE && window.DECK_PRIVATE[st.slide.id] ? '\n\nPRIVATE (offline edition only): ' + window.DECK_PRIVATE[st.slide.id] : '');
     body.dataset.status = st.slide.status || 'draft';
   }
   function writeHash() {

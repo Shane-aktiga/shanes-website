@@ -129,7 +129,7 @@ body.is-idle .hud { opacity: 0.22; }
 
 .notes { position: fixed; left: 16px; bottom: 64px; z-index: 11; max-width: min(46ch, 70vw); padding: 12px 16px; border: 1px solid var(--line); border-radius: 10px; background: rgba(8, 15, 28, 0.94); font-size: 15px; line-height: 1.45; }
 .notes__label { margin: 0 0 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lamp); }
-.notes p:last-child { margin: 0; }
+.notes p:last-child { margin: 0; white-space: pre-line; max-height: 55vh; overflow-y: auto; }
 .help { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: rgba(4, 8, 16, 0.7); }
 .help[hidden], .notes[hidden] { display: none; }
 .help__card { width: min(560px, 90vw); padding: 24px 28px; border: 1px solid var(--line); border-radius: 14px; background: rgba(8, 15, 28, 0.98); }
