@@ -11,7 +11,7 @@ site is down. It is a snapshot: rebuild it after any change to the deck.
 
 Needs Pillow (pip install pillow) to shrink the photographs. No other dependencies.
 """
-import base64, io, pathlib, re, sys
+import base64, io, json, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PAGE = ROOT / "presentations" / "winding-road" / "index.html"
@@ -54,6 +54,11 @@ def main():
         if local(m.group(1)).name == "deck.js":
             js = re.sub(r"(['\"])(/assets/img/[^'\"]+\.(?:jpe?g|png))\1",
                         lambda i: "'%s'" % image_uri(local(i.group(2))), js)
+        if local(m.group(1)).name == "deck.js":
+            # Private speaker notes (gitignored) go ONLY into this offline file, never into the public site or public PDF.
+            pn = ROOT / "tools" / "private-notes.json"
+            if pn.is_file():
+                js = "window.DECK_PRIVATE = %s;\n%s" % (json.dumps(json.loads(pn.read_text(encoding="utf-8"))), js)
         return "<script>\n%s\n</script>" % js.replace("</script", "<\\/script")
     html = re.sub(r'<script src="(/assets/js/[^"]+)"></script>', inline_js, html)
 
