@@ -87,7 +87,7 @@ body.no-scene .fallback-bg { display: block; }
 
 /* timeline */
 .sl--timeline::before { background: linear-gradient(90deg, rgba(5, 10, 20, 0.84) 0%, rgba(5, 10, 20, 0.66) 70%, rgba(5, 10, 20, 0.2) 100%); }
-.sl-text--wide { max-width: calc(var(--u) * 9.6); }
+.sl-text--wide { max-width: calc(var(--u) * 8.4); }
 .sl-timeline { list-style: none; margin: calc(var(--u) * 0.5) 0 0; padding: 0; display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: calc(var(--u) * 0.4); position: relative; }
 .sl-timeline::before { content: ""; position: absolute; left: 0; right: 0; top: calc(var(--u) * 0.1); height: 2px; background: linear-gradient(90deg, var(--lamp), var(--beacon)); opacity: 0.7; }
 .sl-timeline__item { position: relative; padding-top: calc(var(--u) * 0.42); }
