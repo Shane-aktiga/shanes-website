@@ -149,6 +149,14 @@
 
 .sp-prose figure { margin: var(--sp-space-6) 0; }
 
+/* A small portrait beside a person's section: a quarter of the column, photo cropped to a tall rectangle. */
+.sp-prose .sp-portrait { max-width: 11rem; margin: var(--sp-space-5) 0 0; }
+.sp-prose .sp-portrait img { aspect-ratio: 4 / 5; object-fit: cover; object-position: center 20%; }
+@media (min-width: 48em) {
+  .sp-prose .sp-portrait { float: right; margin: var(--sp-space-2) 0 var(--sp-space-5) var(--sp-space-6); }
+  .sp-prose h2 { clear: both; }
+}
+
 /* Responsive video embed, migrated from the WordPress Vimeo block. */
 .sp-prose .sp-embed {
   position: relative;

@@ -27,7 +27,10 @@
                never show quotation marks, so editorial lines are never presented as spoken quotes.
      status    'verified' = facts and wording come from Shane's interview or from shaneparreco.com
                'draft'    = provisional. Shows a DRAFT tag in review mode.
-     quotes    split only: [{ text, who, portrait }] short sourced quotes (2.3)
+     logos     split only: [{ src, alt }] a row of small light tiles (8.1)
+   image.w   frame width in screen units (default 5.2); image.fit 'contain' shows the whole picture with no crop or frame
+   image.aside { src, alt, w } a small second image (a logo) to the right of the main one
+   quotes    split only: [{ text, who, portrait }] short sourced quotes (2.3)
    notes     speaker notes (press N). Shareable version only, see above.
 
    Chapter fields
@@ -63,7 +66,7 @@ window.DECK = {
           eyebrow: 'Roots',
           title: 'Born Into a Business',
           body: 'A family business. A childhood on job sites.',
-          image: { src: '/assets/img/wr-baby.jpg', alt: 'A laughing baby in a pink outfit sitting beside a stuffed rabbit', ratio: '4 / 3', pos: 'center 30%' },
+          image: { src: '/assets/img/wr-baby.jpg', alt: 'A laughing baby in a pink outfit sitting beside a stuffed rabbit', ratio: '1 / 1', pos: 'center 12%', w: 4.4 },
           notes: 'Three generations in construction and stone work: an immigrant Italian stonemason, then a Maryland construction company outside DC led by Shane\'s grandfather, father and uncle. Childhood weekends and summers on job sites: fuel trucks, machinery, foremen, hands-on work. The baby photo is a cameo, not a photo of the business.' },
         { id: 'roots-yours', type: 'split', status: 'verified',
           eyebrow: 'Roots',
@@ -100,12 +103,11 @@ window.DECK = {
         { id: 'way-ideas', type: 'split', status: 'draft',
           eyebrow: 'Finding my way',
           title: 'Two Ideas That Changed Everything',
-          body: ['Deming: the kind of workplace worth building.', 'Campbell: the kind of work worth pursuing.'],
           quotes: [
-            { text: 'People are entitled to joy in work.', who: 'W. Edwards Deming', portrait: null },
-            { text: 'Follow your bliss.', who: 'Joseph Campbell', portrait: null }
+            { text: 'People are entitled to joy in work.', who: 'W. Edwards Deming', sub: 'the kind of workplace worth building', portrait: '/assets/img/wr-deming.jpg' },
+            { text: 'Follow your bliss.', who: 'Joseph Campbell', sub: 'the kind of work worth pursuing', portrait: '/assets/img/wr-campbell.jpg' }
           ],
-          image: { wanted: 'Optional portraits of Deming and Campbell, supplied by Shane from a licensed or public-domain source. Claude does not place photos of public figures.' },
+          image: { wanted: 'None. Portraits supplied by Shane.' },
           notes: 'Brevard integrated studies and organizational leadership, final year 2003 to 2004. Deming clarified the kind of workplace Shane wanted; Campbell encouraged the kind of work worth pursuing. They are two distinct philosophies, used as lenses, not a lecture: both return later (Deming at the team pivot and at Joy as a System). SOURCE CHECK before publishing: the Deming line is widely credited to him (The Deming Institute lists it) but confirm the exact book and page; Campbell\'s phrase comes from The Power of Myth (with Bill Moyers, 1988).' }
       ]
     },
@@ -131,7 +133,7 @@ window.DECK = {
           eyebrow: 'Following my bliss',
           title: 'Finding the Sky',
           body: ['Paragliding. Skydiving. Wind-tunnel flight.', 'I wasn\'t chasing a business. I was chasing an interest.'],
-          image: { src: '/assets/img/wr-skydive-selfie.jpg', alt: 'Shane smiling in a skydiving helmet in freefall above farmland', ratio: '4 / 3', pos: 'center 35%' },
+          image: { src: '/assets/img/wr-wind-tunnel.jpg', alt: 'Shane in a red flight suit, flying belly-down above the open-air wind tunnel with green mountains behind', ratio: '1 / 1', pos: 'center 40%', w: 4.6, caption: 'Above the wind tunnel, Maggie Valley' },
           notes: 'Paragliding training began near western North Carolina and finished in Utah at Point of the Mountain. Skydiving, and work at the Maggie Valley wind tunnel. During a hard stretch in life, flying reconnected him with joy. Keep intimate details off the screen. A wind-tunnel photo would be a good optional addition.' }
       ]
     },
@@ -156,7 +158,7 @@ window.DECK = {
         { id: 'detour-show-up', type: 'quote', status: 'verified', editorial: true,
           eyebrow: 'The unexpected detour',
           title: 'Choose How You Show Up',
-          body: 'You can\'t always choose what happens next. But sometimes you can choose your next step.',
+          body: 'The only thing you can control is how you show up and what you focus on.',
           image: { wanted: 'None needed' },
           notes: 'PROPOSED EDITORIAL LINE that Shane approved as the concept: not a verbatim quotation. The takeaway he most wants to emphasize. Acknowledge the limits on choice and the structural realities. This is not "prison was a blessing".' }
       ]
@@ -175,15 +177,15 @@ window.DECK = {
         { id: 'again-intention', type: 'quote', status: 'verified', editorial: true,
           eyebrow: 'Starting over',
           title: 'Rebuilding With Intention',
-          body: 'I didn\'t need to figure out my entire future. I needed to choose my next step.',
-          image: { src: '/assets/img/wr-ground-handling.jpg', alt: 'A pilot ground-handling a paraglider with a moustache graphic over a hillside', ratio: '4 / 3', pos: 'center 40%' },
+          body: 'I got to start over. And I made it count.',
+          image: { src: '/assets/img/wr-skydive-selfie.jpg', alt: 'Shane smiling in a skydiving helmet in freefall above farmland', ratio: '4 / 3', pos: 'center 35%' },
           notes: 'Carpentry work in DC. He waited for permission to travel and train, aimed for his instructor qualification and found a skydiving drop zone. Instructor rating completed in 2018.' },
         { id: 'again-marathon', type: 'split', status: 'verified',
           eyebrow: 'Starting over',
           title: 'The Music Marathon',
-          body: ['Three shows in five days.', 'Reclaiming joy.'],
+          body: 'My first approved travel was to head back to Brevard and play 4 live shows in a week.',
           image: { src: '/assets/img/wr-music-marathon.jpg', alt: 'A band playing in a venue with drums, percussion and bass, a little blurred', ratio: '4 / 3', pos: 'center 40%' },
-          notes: 'A visit to Brevard: two days of rehearsal, then three gigs in five days with friends. It led to a new band and helped seal the move back to Brevard and Asheville.' }
+          notes: 'A visit to Brevard: two days of rehearsal, then four live shows in a week with friends. It led to a new band and helped seal the move back to Brevard and Asheville.' }
       ]
     },
     /* ------------------------------------------------------------------ 6 */
@@ -195,18 +197,18 @@ window.DECK = {
           eyebrow: 'The accidental entrepreneur',
           title: 'A 94-Page Syllabus and a Stack of DVDs',
           body: 'Students deserved something better.',
-          image: { wanted: 'The syllabus cover or a page, if Shane still has it. Nothing fabricated.' },
+          image: { src: '/assets/img/wr-syllabus-stack.png', alt: 'A deep stack of printed pages, the cover on top reading Introduction to Paragliding, Student Study Guide', fit: 'contain', w: 5.6 },
           notes: 'Around 2018, paragliding instruction used a dense 94-page text syllabus and DVDs. Newly rated as an instructor, Shane saw an access and usability problem.' },
         { id: 'ent-wix', type: 'split', status: 'verified',
           eyebrow: 'The accidental entrepreneur',
           title: 'I Built It With Wix',
-          body: 'I didn\'t know how to build a software company. I knew how to make something better for my students.',
+          body: 'I never made a website before, but I had an idea and chose to run with it.',
           image: { src: '/assets/img/wr-training-site-early.jpg', alt: 'The early Paraglider Training website: Time to Fly, with student and instructor login and sign-up', ratio: '2 / 1', pos: 'center',
                    caption: 'The early training site' },
           notes: 'He reworked the syllabus into chapter navigation and digital learning. No payments and no true LMS at first, only account registration. Do not claim full learning-management features at launch.' },
         { id: 'ent-world', type: 'timeline', status: 'verified',
           eyebrow: 'The accidental entrepreneur',
-          title: 'The World Showed Up',
+          title: 'The word spread across the paragliding community.',
           items: [
             { when: 'Nearly 2,000', what: 'learners' },
             { when: '60 to 70', what: 'countries' },
@@ -228,7 +230,7 @@ window.DECK = {
       node: { x: -6, z: -142, az: -10, el: 16, dist: 60, anchor: 0.7 },
       slides: [
         { id: 'akt-services', type: 'timeline', status: 'verified',
-          eyebrow: 'Building Aktiga',
+          eyebrow: 'OTC \u2192 Aktiga',
           title: 'From Products to Possibilities',
           items: [
             { when: 'Paragliding', what: 'the first course' },
@@ -236,11 +238,12 @@ window.DECK = {
             { when: 'Ballet', what: 'Learn Ballet' },
             { when: 'Nonprofit learning', what: 'for organizations' }
           ],
-          image: { src: '/assets/img/wr-learn-ballet.jpg', alt: 'The Learn Ballet home page: a teal logo, a ballerina leaning back and student, teacher and login panels', ratio: '5 / 2', pos: 'center 55%',
-                   caption: 'Learn Ballet' },
+          image: { src: '/assets/img/wr-learn-ballet.jpg', alt: 'The Learn Ballet home page: a teal logo, a ballerina leaning back and student, teacher and login panels', ratio: '16 / 10', pos: 'center top', w: 4.6,
+                   caption: 'Learn Ballet',
+                   aside: { src: '/assets/img/wr-logo-otc.png', alt: 'Online Training Concepts logo', w: 2.4 } },
           notes: 'Each step grew out of helping someone. Shane built skydiving and Learn Ballet, the latter for his mother, a longtime Cecchetti ballet teacher and examiner; multiple schools used it. COVID shifted Online Training Concepts toward organizations that needed help with learning systems. Say plainly that the agency work was useful but less fulfilling, to set up the pivot story later. Get approval before showing any client screenshot.' },
         { id: 'akt-immersive', type: 'split', status: 'verified',
-          eyebrow: 'Building Aktiga',
+          eyebrow: 'OTC \u2192 Aktiga',
           title: 'Chasing a New Possibility',
           body: ['2023: Aktiga. Immersive learning, 3D and VR on the web.', 'Fascinating technology isn\'t the same as a sustainable business.'],
           image: { src: '/assets/img/wr-xrwd-home.jpg', alt: 'The XRWD website home page: the layered XRWD logo, a purpose statement and an Overview section about spatial experiences on the web', ratio: '16 / 10', pos: 'center top',
@@ -250,13 +253,12 @@ window.DECK = {
           eyebrow: 'September 2024',
           title: 'Hurricane Helene Changed Everything',
           body: 'When the path disappeared, we had to find another way forward.',
-          image: { wanted: 'One or two authentic Helene flood photos from a friend. Contained frame only. Photographer credit and permission needed. Nothing stock or fabricated.' },
+          image: { src: '/assets/img/wr-helene.jpg', alt: 'Aerial view of brown floodwater covering buildings and lots beside a highway and bridge, mountains on the horizon', ratio: '16 / 9', pos: 'center', w: 6.4, caption: 'Asheville, after Helene' },
           notes: 'Helene disrupted Asheville and narrowed Aktiga\'s viable paths while financial pressure was already building. Describe it accurately: Helene created pressure, but it was not the only cause of the pivot. Keep the tone human and specific to what the team lived through, not dramatic. Slow down on this slide.' },
         { id: 'akt-team', type: 'quote', status: 'verified', editorial: true,
-          eyebrow: 'Building Aktiga',
+          eyebrow: 'OTC \u2192 Aktiga',
           title: 'The Team Showed Me Another Way',
-          body: 'Circumstances forced us to reconsider. The team helped us choose a direction.',
-          attribution: 'Deming\'s idea, back again: pride and joy in the work.',
+          body: 'Circumstances forced us to reconsider. The team chose our direction.',
           image: { src: '/assets/img/work-card.jpg', alt: 'The Aktiga office, a circular slatted wall sculpture beside an open workspace', caption: 'The Aktiga office' },
           notes: 'Hurricane Helene in September 2024 put the company under pressure; in January 2025 the team reached consensus to offer its software development process as a service. Shane was disappointed at first about returning to agency-style work and listened; relief came once clients and revenue arrived. Key distinction: Helene created pressure; the team helped determine the response. Deming returns here: people shaping a workplace where they take pride and joy in the work. Tie back to the opening question of what kind of workplace he could thrive in. A team photo would replace the office image.' }
       ]
@@ -268,14 +270,19 @@ window.DECK = {
       slides: [
         { id: 'mean-people', type: 'split', status: 'verified',
           eyebrow: 'Finding meaning in the work',
-          title: 'Not Technology for Its Own Sake',
+          title: 'Helping nonprofit organizations make good use of technology.',
           body: 'More capacity for people doing essential work.',
-          image: { wanted: 'Client-approved screenshots only. No sensitive client data on screen.' },
+          image: { wanted: 'None. Logos shown.' },
+          logos: [
+            { src: '/assets/img/wr-logo-homeward-bound.jpg', alt: 'Homeward Bound WNC' },
+            { src: '/assets/img/wr-logo-invest-appalachia.png', alt: 'Invest Appalachia' },
+            { src: '/assets/img/wr-logo-artsavl.png', alt: 'ArtsAVL' }
+          ],
           notes: 'Aktiga works with mission-driven teams that are often overworked and under-resourced, helping them do essential work with more capacity. Possible grounded examples: Homeward Bound of WNC and its AHOPE Day Center, ArtsAVL, Invest Appalachia. CONFIRM which of these are actual clients before naming any on screen. No confidential details or unapproved screenshots.' },
         { id: 'mean-products', type: 'quote', status: 'verified', editorial: true,
           eyebrow: 'Finding meaning in the work',
           title: 'Joy as a System',
-          body: 'Entrepreneurship isn\'t just an exit plan. It can be a life plan.',
+          body: 'Entrepreneurship is more than just an exit plan.',
           image: { src: '/assets/img/work-stage.jpg', alt: 'Shane presenting Agenda Keeper on stage at Venture Connect, a slide reading The Problem behind him',
                    caption: 'Pitching Agenda Keeper at Venture Connect' },
           notes: 'Bring the threads together: the team, meaningful client work, continued product exploration including Agenda Keeper (beta 2025, rebuilt 2026, launched publicly fall 2026), and Deming\'s ideal of a workplace where people take joy in the work. Campbell and Deming, curiosity and intentional choice. The road is still unfolding. Do not state traction or revenue numbers Shane has not given.' },
