@@ -105,6 +105,13 @@ body.no-scene .fallback-bg { display: block; }
   background: linear-gradient(0deg, rgba(5, 10, 20, 0.7), rgba(5, 10, 20, 0)); transition: opacity 0.6s ease; font-family: var(--mono); font-size: 12px; color: var(--muted); }
 body.is-idle .hud { opacity: 0.22; }
 .hud:focus-within, .hud:hover { opacity: 1 !important; }
+/* Full screen: once the cursor rests, the buttons on the right go away entirely; the chapter name and the
+   progress bar stay (dimmed). They come back on any cursor movement or when full screen ends. */
+body.is-idle.is-fullscreen .hud { opacity: 0.45; }
+body.is-idle.is-fullscreen .hud__right { visibility: hidden; }
+body.is-idle.is-fullscreen .hud:hover .hud__right { visibility: visible; }
+/* The speaker-notes button is hidden for this talk (the N key still works); other decks can show it again. */
+#btn-notes { display: none; }
 .hud__left { min-width: 0; } .hud__chapter { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: 0.08em; text-transform: uppercase; }
 .hud__center { display: flex; align-items: center; gap: 12px; }
 .hud__right { display: flex; justify-content: flex-end; gap: 6px; flex-wrap: wrap; }
@@ -173,7 +180,7 @@ body.is-idle .hud { opacity: 0.22; }
 .sl-pquotes { display: grid; gap: calc(var(--u) * 0.28); margin-top: calc(var(--u) * 0.3); }
 .sl-pquote { margin: 0; display: block; padding-left: calc(var(--u) * 0.3); border-left: calc(var(--u) * 0.04) solid var(--lamp); }
 .sl-pquote--portrait { display: grid; grid-template-columns: auto 1fr; column-gap: calc(var(--u) * 0.3); align-items: center; }
-.sl-pquote img { grid-row: 1 / 3; width: calc(var(--u) * 1.1); height: calc(var(--u) * 1.1); object-fit: cover; border-radius: 50%; }
+.sl-pquote img { grid-row: 1 / 3; width: calc(var(--u) * 1.3); height: calc(var(--u) * 1.3); object-fit: cover; object-position: center 25%; border-radius: 50%; box-shadow: 0 0 0 2px rgba(255, 226, 176, 0.35); }
 .sl-pquote__text { margin: 0; font-size: calc(var(--u) * 0.36); line-height: 1.25; font-weight: 300; color: var(--bright); }
 .sl-pquote__who { font-family: var(--mono); font-weight: 400; font-size: calc(var(--u) * 0.17); letter-spacing: 0.06em; color: var(--muted); margin-top: calc(var(--u) * 0.06); }
 
@@ -188,3 +195,15 @@ body.is-idle .hud { opacity: 0.22; }
 .sl-urls { margin: 0; padding: 0; list-style: none; font-family: var(--mono); font-weight: 400; font-size: calc(var(--u) * 0.26); letter-spacing: 0.04em; color: var(--text); line-height: 1.5; }
 .sl-urls p, .sl-urls li { margin: 0; }
 .sl--final[data-variant="a"] .sl-urls--b, .sl--final[data-variant="b"] .sl-urls--a { display: none; }
+
+/* picture options */
+.sl-fig--contain img { aspect-ratio: auto; object-fit: contain; border-radius: 0; box-shadow: none; }
+.sl-figrow { display: flex; align-items: center; gap: calc(var(--u) * 0.4); margin-top: calc(var(--u) * 0.3); }
+.sl-figrow .sl-fig { margin-top: 0; flex: 0 1 auto; }
+.sl-fig--aside img { aspect-ratio: auto; object-fit: contain; box-shadow: 0 calc(var(--u) * 0.2) calc(var(--u) * 0.6) rgba(2, 6, 14, 0.5); border-radius: calc(var(--u) * 0.06); }
+/* client logos on light tiles (some logos are transparent) */
+.sl-logos { list-style: none; margin: calc(var(--u) * 0.4) 0 0; padding: 0; display: flex; gap: calc(var(--u) * 0.26); align-items: stretch; max-width: calc(var(--u) * 7.4); }
+.sl-logos li { flex: 1 1 0; display: flex; align-items: center; justify-content: center; background: #F4F1EA; border-radius: calc(var(--u) * 0.06); padding: calc(var(--u) * 0.22) calc(var(--u) * 0.24); min-height: calc(var(--u) * 1.5);
+  box-shadow: 0 calc(var(--u) * 0.2) calc(var(--u) * 0.6) rgba(2, 6, 14, 0.5); }
+.sl-logos img { display: block; max-width: 100%; max-height: calc(var(--u) * 1.3); object-fit: contain; }
+.sl-pquote__who { white-space: normal; }

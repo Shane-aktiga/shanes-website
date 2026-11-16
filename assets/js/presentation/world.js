@@ -247,6 +247,29 @@
       path.ahead = new THREE.Points(new THREE.BufferGeometry(), dotMat(0.32));
       path.walked.renderOrder = path.ahead.renderOrder = 6; path.walked.frustumCulled = path.ahead.frustumCulled = false;
       scene.add(path.walked); scene.add(path.ahead);
+
+      // The road does not end at the last waypoint. A tail continues past it in the same direction, climbs over the
+      // next ridge and fades as it goes around, so the trail leaves the frame instead of stopping at a light.
+      var last = NODES[NODES.length - 1], prev = NODES[NODES.length - 2];
+      var dx = last.x - prev.x, dz = last.z - prev.z, dl = Math.sqrt(dx * dx + dz * dz) || 1; dx /= dl; dz /= dl;
+      var tailPts = [new THREE.Vector3(prev.x, 0, prev.z), new THREE.Vector3(last.x, 0, last.z)];
+      [[22, 0], [44, -4], [62, -14], [74, -30], [78, -50]].forEach(function (st) {
+        // st[0] along the travel direction, st[1] to the side of it (negative bends away toward the far side)
+        tailPts.push(new THREE.Vector3(last.x + dx * st[0] + dz * st[1], 0, last.z + dz * st[0] - dx * st[1]));
+      });
+      var tail = new THREE.CatmullRomCurve3(tailPts, false, 'catmullrom', 0.5);
+      var TSTEPS = 150, tp = [], tc = [], t0 = 1 / (tailPts.length - 1);   // skip the first segment (prev -> last): it is already drawn
+      for (var ts = 0; ts <= TSTEPS; ts++) {
+        var tu = t0 + (1 - t0) * ts / TSTEPS, tq = tail.getPoint(tu), f = ts / TSTEPS;
+        var fade = f < 0.45 ? 1 : Math.max(0, 1 - (f - 0.45) / 0.55);
+        tp.push(tq.x, H(tq.x, tq.z) + 0.9, tq.z); tc.push(fade, fade, fade);
+      }
+      var tailGeo = new THREE.BufferGeometry();
+      tailGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(tp), 3));
+      tailGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(tc), 3));
+      var tailMat = dotMat(0.32); tailMat.vertexColors = true; tailMat.depthTest = true;   // the ridge hides what is behind it
+      path.tail = new THREE.Points(tailGeo, tailMat); path.tail.renderOrder = 6; path.tail.frustumCulled = false;
+      scene.add(path.tail);
     }
     var lastSplit = -1;
     function splitPath(prog) {

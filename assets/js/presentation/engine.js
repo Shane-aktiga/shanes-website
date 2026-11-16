@@ -123,12 +123,19 @@
     (Array.isArray(body) ? body : [body]).forEach(function (t) { if (t) parent.appendChild(el('p', cls || 'sl-p', t)); });
   }
   function photo(img, cls) {
-    var fig = el('figure', cls || 'sl-fig');
+    var fig = el('figure', (cls || 'sl-fig') + (img.fit === 'contain' ? ' sl-fig--contain' : ''));
+    if (img.w) fig.style.maxWidth = 'calc(var(--u) * ' + img.w + ')';
     var im = el('img'); im.src = img.src; im.alt = img.alt || ''; im.decoding = 'async';
     if (img.ratio) im.style.aspectRatio = img.ratio; if (img.pos) im.style.objectPosition = img.pos;
     fig.appendChild(im);
     if (img.caption) fig.appendChild(el('figcaption', 'sl-caption', img.caption));
-    return fig;
+    if (!img.aside) return fig;
+    // a small second picture (a logo) sits to the right of the main one
+    var row = el('div', 'sl-figrow'); row.appendChild(fig);
+    var side = el('figure', 'sl-fig sl-fig--aside'); if (img.aside.w) side.style.maxWidth = 'calc(var(--u) * ' + img.aside.w + ')';
+    var si = el('img'); si.src = img.aside.src; si.alt = img.aside.alt || ''; si.decoding = 'async'; side.appendChild(si);
+    row.appendChild(side);
+    return row;
   }
   function buildSlide(step) {
     var s = step.slide, ch = chapters[step.c];
@@ -153,7 +160,7 @@
           var f = el('figure', 'sl-pquote' + (q.portrait ? ' sl-pquote--portrait' : ''));
           if (q.portrait) { var pi = el('img'); pi.src = q.portrait; pi.alt = q.who; f.appendChild(pi); }
           var bq = el('blockquote', 'sl-pquote__text', q.text);
-          f.appendChild(bq); f.appendChild(el('figcaption', 'sl-pquote__who', q.who));
+          f.appendChild(bq); f.appendChild(el('figcaption', 'sl-pquote__who', q.who + (q.sub ? ' \u00b7 ' + q.sub : '')));
           qs2.appendChild(f);
         });
         text.appendChild(qs2);
@@ -210,6 +217,11 @@
     }
     // A photo sits under the words in the same column, so the mountain stays visible on the other side.
     if (s.image && s.image.src && text) text.appendChild(photo(s.image, t === 'full' ? 'sl-fig sl-fig--lg' : 'sl-fig'));
+    if (s.logos && text) {
+      var lr = el('ul', 'sl-logos');
+      s.logos.forEach(function (lg) { var li = el('li'); var li2 = el('img'); li2.src = lg.src; li2.alt = lg.alt || ''; li2.decoding = 'async'; li.appendChild(li2); lr.appendChild(li); });
+      text.appendChild(lr);
+    }
     var wanted = s.image && s.image.wanted && !/^none/i.test(s.image.wanted);
     if (showDrafts && (s.status !== 'verified' || wanted)) {
       var tag = (s.status !== 'verified' ? 'DRAFT' : '') + (s.status !== 'verified' && wanted ? ' · ' : '') + (wanted ? 'PHOTO WANTED: ' + s.image.wanted : '');
