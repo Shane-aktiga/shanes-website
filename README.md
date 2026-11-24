@@ -288,8 +288,12 @@ EXIF needed it, resized and recompressed. Nothing links back to the old site.
 The old media library contains photographs of Alan Watts, Bren&eacute;
 Brown, Joe Hudson and John Wineland, plus several stock landscapes, all
 named `iu-*`. They appear to have been saved from image search and are other
-people's copyrighted work. None of them are used on this site, and
-`/optimism/` deliberately links to each person instead. Keep it that way.
+people's copyrighted work. None of those files are used on this site. On
+24 November 2026 Shane supplied four fresh photographs of the same people
+himself, and those are used on `/optimism/` as `wr-watts.jpg`, `wr-brown.jpg`,
+`wr-hudson.jpg` and `wr-wineland.jpg`. Their usage rights have not been
+verified, so check them if the site ever needs to be airtight. Never reuse the
+old `iu-*` files.
 
 ---
 
