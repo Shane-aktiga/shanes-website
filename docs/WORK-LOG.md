@@ -302,6 +302,23 @@ Drive and Build placeholders now filled).
 
 ---
 
+## 24 November 2026: portraits on the Grow page
+
+**Portraits for Watts, Brown, Hudson and Wineland**
+- Campbell and Deming already had a small floated portrait. The other four
+  people now match: `figure.sp-portrait` directly under each name, 4:5, 11rem
+  wide, right-aligned from 48em up and stacked under the name on phones. No CSS
+  changes were needed.
+- Shane supplied the photographs. Each was cropped to 4:5 around the face and
+  saved at 600 by 750 (`assets/img/wr-watts.jpg`, `wr-brown.jpg`,
+  `wr-hudson.jpg`, `wr-wineland.jpg`, 60 to 135 KB each). Checked on a contact
+  sheet that every file shows the person its name says.
+- Measured at 1440, 1024 and 390: no horizontal overflow, all four images load,
+  and the next heading sits 24px under each figure. Usage rights for the four
+  photographs are unverified (see README).
+
+---
+
 ## Working patterns that paid off
 
 - **Measure, do not eyeball.** Bounding boxes, computed styles and row margins

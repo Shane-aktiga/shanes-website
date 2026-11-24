@@ -5,7 +5,7 @@ work on it, and what is left. For the history of how it got here, see
 `WORK-LOG.md`. For build mechanics and the design system, see the root
 `README.md`.
 
-Last updated 1 November 2026, after the 3D hero went live on the homepage. Everything described here is on
+Last updated 24 November 2026, after portraits were added to the Grow page. Everything described here is on
 `main` and live.
 
 ---
@@ -98,7 +98,9 @@ docs/             these two files
 
 1. **Never use the `iu-*` images.** They are other people's copyrighted work
    (Alan Watts, Brene Brown, Joe Hudson, John Wineland, stock landscapes).
-   `/optimism/` links to each person instead. See README.
+   The Grow page now shows four photographs Shane supplied himself on 24
+   November 2026 (`wr-watts.jpg`, `wr-brown.jpg`, `wr-hudson.jpg`,
+   `wr-wineland.jpg`); their usage rights are unverified. See README.
 2. **Cards open on click or tap only, never on hover.** Hovering a light
    brightens it and its ground ring but does not open anything.
 3. **The 3D hero's gestures are a deliberate split.** Up and down scrolling
